@@ -68,7 +68,7 @@ proof -
   have L1: "Bet B C C"
     by (rule bet_right)
 
-  have construction: "\<exists>X. Bet B X B \<and> Bet C X A" 
+  have construction: "\<exists>X. Bet B X B \<and> Bet C X A"
     using inner_pasch H L1 by this
 
   obtain X where
@@ -125,7 +125,7 @@ proof -
   show Goal : "Bet B C D"
     using L6 L4 by (rule ssubst)
 qed
-  
+
 lemma bet_unique_middle:
   "Bet A B C \<Longrightarrow> Bet A C B \<Longrightarrow> B = C"
 proof -
@@ -150,13 +150,13 @@ proof -
     using bet_id [OF L4] by this
 
   show Goal: "B = C" using L5 L6 by metis
-  
+
 qed
 
-lemma between_inner_trans:  
+lemma bet_inner_trans:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
 proof -
-  assume H1: "Bet A B D" 
+  assume H1: "Bet A B D"
   assume H2: "Bet B C D"
 
   have L1: "Bet D B A"
@@ -164,11 +164,11 @@ proof -
 
   have L2: "Bet C B A"
     using H2 L1 by (rule CBA_BCD)
-  
+
   show Goal: "Bet A B C" using L2 by (rule bet_sym)
 qed
 
-lemma between_exchange3:
+lemma bet_exchange3:
   "Bet A B C \<Longrightarrow> Bet A C D \<Longrightarrow> Bet B C D"
 proof -
   assume H1: "Bet A B C"
@@ -223,7 +223,7 @@ proof -
     by (rule congr_refl)
 
   have L7: "Congr X Y Y Y"
-    using L4 L3 L5 L6 H2 H4 H1 
+    using L4 L3 L5 L6 H2 H4 H1
       by (rule five_segment)
 
   show "X = Y"
@@ -246,7 +246,7 @@ proof -
      using L2 by (rule congr_reverse)
 
    have L4: "Bet B C X"
-     using H1 L1 by (rule between_exchange3)
+     using H1 L1 by (rule bet_exchange3)
 
    have L5: "Congr C X C X"
      by (rule congr_refl)
@@ -302,7 +302,7 @@ proof -
   have L1: "Bet A C D"
     using H1 H2 H3 by (rule outer_transitivity_between2)
 
-  have L2: "Bet C B A" 
+  have L2: "Bet C B A"
     using H1 by (rule bet_sym)
 
   have L3: "Bet D C B"
@@ -330,7 +330,7 @@ proof -
 
   have L1: "Bet B C D"
     using H1 H2
-    by (rule between_exchange3)
+    by (rule bet_exchange3)
 
   show "Bet A B D"
   proof (cases "B = C")
@@ -352,7 +352,7 @@ proof -
   qed
 qed
 
-lemma bet_inner_conn: 
+lemma bet_inner_conn:
   "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
 proof -
   assume H1: "Bet A B D"
@@ -371,5 +371,5 @@ proof -
       using L3 by (rule disjI1)
   next
     assume Hneq: "B \<noteq> C"
-    
+
 end

@@ -92,6 +92,9 @@ Definition bet_CBA : forall {A B C D : Point}, Between C B A -> Between A C D ->
         end
     end.
 
+Definition segment_extension_unique : forall {A B C D : Point},
+    A <> B -> Between A B C -> Between A B D -> Congr B C B D -> C = D :=
+
 Definition between_concat : forall {A B C D : Point},
     Between A B C -> Between A C D -> Between A B D :=
   fun (A B C D : Point) (Habc : Between A B C) (Hacd : Between A C D) =>

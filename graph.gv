@@ -1,0 +1,247 @@
+digraph G {
+    graph [
+        rankdir=TB,
+        splines=spline,
+        nodesep=0.5,
+        ranksep=1,
+        concentrate=false,
+        bgcolor="white",
+        newrank=true
+    ];
+
+    node [
+        fontname="Helvetica",
+        fontsize=11,
+        margin="0.12,0.08"
+    ];
+
+    edge [
+        color="black",
+        arrowsize=0.7
+    ];
+
+    // ============================================================
+    // Axioms
+    // ============================================================
+
+    subgraph cluster_axioms {
+        label="Axioms";
+        fontname="Helvetica Bold";
+        fontsize=13;
+        style="rounded";
+        color="gray60";
+
+        node [
+            shape=box,
+            style="rounded,filled"
+        ];
+
+        congr_pseudo_refl;
+        congr_inner_transitivity;
+        congr_id;
+        segment_construction;
+        bet_id
+        inner_pasch;
+        five_segment;
+    }
+
+
+    // ============================================================
+    // Congruence lemmas
+    // ============================================================
+
+    subgraph cluster_congr {
+        label="Congruence";
+        fontname="Helvetica Bold";
+        fontsize=13;
+        style="rounded";
+        color="black";
+
+        node [
+            shape=box,
+            style="filled"
+        ];
+
+        congr_refl;
+        congr_reverse;
+        congr_reverse_id;
+        construction_uniqueness;
+    }
+
+
+    // ============================================================
+    // Betweenness lemmas
+    // ============================================================
+
+    subgraph cluster_bet {
+        label="Betweenness";
+        fontname="Helvetica Bold";
+        fontsize=13;
+        style="rounded";
+        color="black";
+
+        node [
+            shape=box,
+            style="filled"
+        ];
+
+        bet_right;
+        bet_sym;
+        bet_left;
+        CBA_BCD;
+        bet_unique_middle;
+        bet_inner_trans;
+        bet_exchange3;
+        between_exchange2;
+        bet_outer_trans;
+        bet_concat;
+    }
+
+    // ============================================================
+    // Interaction
+    // ============================================================
+    subgraph cluster_interaction {
+        label="Interaction";
+        fontname="Helvetica Bold";
+        fontsize=13;
+        style="rounded";
+        color="black";
+
+        node [
+            shape=box,
+            style="filled"
+        ];
+
+        outer_transitivity_between2;
+    }
+
+    // ============================================================
+    // Dependencies
+    // ============================================================
+
+    congr_pseudo_refl
+        -> congr_refl;
+
+    congr_inner_transitivity
+        -> congr_refl;
+
+
+    congr_refl
+        -> congr_reverse;
+
+    congr_inner_transitivity
+        -> congr_reverse;
+
+    congr_reverse
+        -> congr_reverse_id;
+
+    congr_id
+        -> congr_reverse_id;
+
+
+    segment_construction
+        -> bet_right;
+
+    congr_id
+        -> bet_right;
+
+    bet_right
+        -> bet_sym;
+
+    inner_pasch
+        -> bet_sym;
+
+    bet_id
+        -> bet_sym;
+
+    bet_right
+        -> bet_left;
+
+    bet_sym
+        -> bet_left;
+
+    bet_sym
+        -> CBA_BCD;
+
+    inner_pasch
+        -> CBA_BCD;
+
+    bet_id
+        -> CBA_BCD;
+
+    bet_sym
+        -> bet_unique_middle;
+
+    inner_pasch
+        -> bet_unique_middle;
+
+    bet_id
+        -> bet_unique_middle;
+
+    bet_sym
+        -> bet_inner_trans;
+
+    CBA_BCD
+        -> bet_inner_trans;
+
+    bet_sym
+        -> bet_exchange3;
+
+    inner_pasch
+        -> bet_exchange3;
+
+    bet_id
+        -> bet_exchange3;
+
+    congr_reverse
+        -> construction_uniqueness;
+
+    congr_inner_transitivity
+        -> construction_uniqueness;
+
+    congr_refl
+        -> construction_uniqueness;
+
+    five_segment
+        -> construction_uniqueness;
+
+    congr_id
+        -> construction_uniqueness;
+
+    congr_reverse
+        -> outer_transitivity_between2;
+
+    bet_exchange3
+        -> outer_transitivity_between2;
+
+    congr_refl
+        -> outer_transitivity_between2;
+
+    construction_uniqueness
+        -> outer_transitivity_between2;
+
+    bet_sym
+        -> between_exchange2;
+
+    CBA_BCD
+        -> between_exchange2;
+
+    outer_transitivity_between2
+        -> between_exchange2;
+
+    outer_transitivity_between2
+        -> bet_outer_trans;
+
+    bet_sym
+        -> bet_outer_trans;
+
+    bet_exchange3
+        -> bet_concat;
+
+    bet_outer_trans
+        -> bet_concat;
+
+    outer_transitivity_between2
+        -> between_exchange2 [style=invis];
+
+}
