@@ -4,69 +4,64 @@ begin
 
 
 lemma congr_refl:
-  "Congr A B A B"
+  fixes A B :: Point
+  shows "Congr A B A B"
 proof -
 
- have L1: "Congr B A A B"  by (rule congr_pseudo_refl)
+  have L1: "Congr B A A B"  by (rule congr_pseudo_refl [of B A])
 
- show "Congr A B A B" using L1 L1  by (rule congr_inner_transitivity)
+  show "Congr A B A B" using L1 L1  by (rule congr_inner_transitivity)
 qed
 
 lemma congr_reverse:
-  "Congr A B C D \<Longrightarrow> Congr C D A B"
+  fixes A B C D :: Point
+  shows "Congr A B C D \<Longrightarrow> Congr C D A B"
 proof -
-
   assume H: "Congr A B C D"
 
-  have L1: "Congr A B A B"  by (rule congr_refl)
-
-  show "Congr C D A B"  using H L1  by (rule congr_inner_transitivity)
+  have L1: "Congr A B A B"  by (rule congr_refl [of A B])
+  show "Congr C D A B"  by (rule congr_inner_transitivity [OF H L1])
 qed
-
 
 lemma congr_reverse_id:
-  "Congr A A C D \<Longrightarrow> C = D"
+  fixes A B C D :: Point
+  shows "Congr A A C D \<Longrightarrow> C = D"
 proof -
+   assume H: "Congr A A C D"
 
-  assume H: "Congr A A C D"
-
-  have L1: "Congr C D A A"  using H by (rule congr_reverse)
-
-  show "C = D" using L1  by (rule congr_id)
-
+  have L1: "Congr C D A A"  by (rule congr_reverse [OF H])
+  show "C = D" by (rule congr_id [OF L1])
 qed
 
-
 lemma bet_right:
-  "Bet A B B"
+  fixes A B :: Point
+  shows "Bet A B B"
 proof -
 
  have L0: "\<exists>E. Bet A B E \<and> Congr B E B B"
   using segment_construction [of A B B B] by this
 
-obtain E where
+ obtain E where
   H1: "Bet A B E" and
   H2: "Congr B E B B"
-  using L0  by metis
+  using L0  by blast
 
   have L1: "B = E"
     using H2  by (rule congr_id)
 
-  have L2: "E = B"
-    using L1  by (rule sym)
-
   show Goal: "Bet A B B"
-    using L2 H1 by metis
+    using L1 H1 by (rule ssubst)
 qed
 
 lemma bet_sym:
-  "Bet A B C \<Longrightarrow> Bet C B A"
+  fixes A B C D :: Point
+  shows "Bet A B C \<Longrightarrow> Bet C B A"
 proof -
 
   assume H: "Bet A B C"
 
   have L1: "Bet B C C"
-    by (rule bet_right)
+    by (rule bet_right [of B C])
 
   have construction: "\<exists>X. Bet B X B \<and> Bet C X A"
     using inner_pasch H L1 by this
@@ -74,20 +69,21 @@ proof -
   obtain X where
     L2: "Bet B X B" and
     L3: "Bet C X A"
-    using construction by metis
+    using construction by blast
 
   have L4: "B = X"
     using L2
     by (rule bet_id)
 
   show Goal: "Bet C B A"
-    using L3 L4 by metis
+    using L4 L3 by (rule ssubst)
 
 qed
 
 
 lemma bet_left:
-  "Bet A A B"
+  fixes A B C D :: Point
+  shows "Bet A A B"
 proof -
 
   have L1: "Bet B A A"
@@ -237,26 +233,23 @@ proof -
   assume H2: "Bet B C D"
   assume H3: "B \<noteq> C"
 
-   obtain X where
+  obtain X where
     L1: "Bet A C X" and
     L2: "Congr C X C D"
-     using segment_construction by metis
+     using segment_construction by blast
 
-   have L3: "Congr C D C X"
-     using L2 by (rule congr_reverse)
+  have L3: "Congr C D C X" by (rule congr_reverse [OF L2])
 
-   have L4: "Bet B C X"
-     using H1 L1 by (rule bet_exchange3)
+  have L4: "Bet B C X" by (rule bet_exchange3 [OF H1 L1])
 
-   have L5: "Congr C X C X"
-     by (rule congr_refl)
+  have L5: "Congr C X C X" by (rule congr_refl [of C X])
 
-   have L6: "D = X"
-     using H3 H2 L3 L4 L5 by (rule construction_uniqueness)
+  have L6: "D = X"
+    using H3 H2 L3 L4 L5 by (rule construction_uniqueness)
 
-   show Goal: "Bet A C D"
-     using L1 L6 by metis
- qed
+  show Goal: "Bet A C D"
+    using L6 L1 by (rule ssubst)
+qed
 
 lemma between_exchange2:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A C D"
@@ -264,7 +257,7 @@ proof -
   assume H1: "Bet A B D"
   assume H2: "Bet B C D"
 
-show "Bet A C D"
+  show "Bet A C D"
   proof (cases "B = C")
 
     assume L1: "B = C"
@@ -277,14 +270,11 @@ show "Bet A C D"
 
     assume L1: "B \<noteq> C"
 
-   have L2 : "Bet D B A"
-     using H1 by (rule bet_sym)
+    have L2 : "Bet D B A" by (rule bet_sym [OF H1])
 
-   have L3 : "Bet C B A"
-     using H2 L2 by (rule CBA_BCD)
+    have L3 : "Bet C B A" by (rule CBA_BCD [OF H2 L2])
 
-    have L4: "Bet A B C"
-      using L3 by (rule bet_sym)
+    have L4: "Bet A B C" by (rule bet_sym [OF L3])
 
     show L5: "Bet A C D"
       using L4 H2 L1 by (rule outer_transitivity_between2)
@@ -302,19 +292,14 @@ proof -
   have L1: "Bet A C D"
     using H1 H2 H3 by (rule outer_transitivity_between2)
 
-  have L2: "Bet C B A"
-    using H1 by (rule bet_sym)
+  have L2: "Bet C B A" by (rule bet_sym [OF H1])
 
-  have L3: "Bet D C B"
-    using H2 by (rule bet_sym)
+  have L3: "Bet D C B" by (rule bet_sym [OF H2])
 
-  have L4: "Bet D C A"
-    using L1 by (rule bet_sym)
+  have L4: "Bet D C A" by (rule bet_sym [OF L1])
 
-  have L5: "C \<noteq> B"
-    using H3 by metis
+  have L5: "C \<noteq> B" by (rule not_sym [OF H3])
 
-  thm outer_transitivity_between2
   have L6: "Bet D B A"
     using L3 L2 L5 by (rule outer_transitivity_between2)
 
@@ -351,6 +336,24 @@ proof -
 
   qed
 qed
+
+lemma not_bet_sym:
+  fixes A B C :: Point
+  shows "\<not> Bet A B C \<Longrightarrow> \<not> Bet C B A"
+proof -
+
+  assume H1: "\<not> Bet A B C"
+  show "\<not> Bet C B A"
+  proof
+    assume Contra: "Bet C B A"
+
+    have H2: "Bet A B C" by (rule bet_sym [OF Contra])
+    show False
+        using H1 H2
+        by (rule notE)
+  qed
+qed
+
 
 lemma bet_inner_conn:
   "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
