@@ -354,6 +354,24 @@ proof -
   qed
 qed
 
+lemma not_bet_BCD:
+  "Bet A B D \<Longrightarrow> \<not> Bet A B C \<Longrightarrow> \<not> Bet B C D"
+
+lemma not_bet_ABC:
+  "Bet A B D \<Longrightarrow> \<not> Bet B C D \<Longrightarrow> \<not> Bet A B C"
+
+lemma not_bet_BCD':
+  "Bet A B D \<Longrightarrow> \<not> Bet A C D \<Longrightarrow> \<not> Bet B C D"
+
+lemma not_bet_BCD_of_not_ABD:
+  "Bet A B C \<Longrightarrow> B \<noteq> C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet B C D"
+
+lemma not_bet_ABC:
+  "Bet A C D \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A B C"
+
+lemma not_bet_ACD:
+  "Bet A B C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A C D"
+
 
 lemma bet_inner_conn:
   "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
