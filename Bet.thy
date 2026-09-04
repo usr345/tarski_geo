@@ -354,8 +354,17 @@ proof -
   qed
 qed
 
-lemma not_bet_BCD:
+lemma contra_inner_trans:
   "Bet A B D \<Longrightarrow> \<not> Bet A B C \<Longrightarrow> \<not> Bet B C D"
+proof -
+  assume H1: "Bet A B D"
+  assume H2: "\<not> Bet A B C"
+
+  have H3: "Bet B C D \<Longrightarrow> Bet A B C" by (rule bet_inner_trans [OF H1])
+
+  show Goal: "\<not> Bet B C D"
+    by (rule contrapos_nn [OF H2 H3])
+qed
 
 lemma not_bet_ABC:
   "Bet A B D \<Longrightarrow> \<not> Bet B C D \<Longrightarrow> \<not> Bet A B C"

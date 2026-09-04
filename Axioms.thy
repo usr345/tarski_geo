@@ -124,23 +124,7 @@ axiomatization where
 
 
 (************************************************************)
-(* A10. Euclid's axiom                                    *)
-(************************************************************)
-
-axiomatization where
-  euclid:
-    "\<And>A B C D T.
-       Bet A D T \<Longrightarrow>
-       Bet B D C \<Longrightarrow>
-       A \<noteq> D \<Longrightarrow>
-       \<exists>X Y.
-         Bet A B X \<and>
-         Bet A C Y \<and>
-         Bet X T Y"
-
-
-(************************************************************)
-(* A11. Dedekind continuity                               *)
+(* A10. Dedekind continuity                               *)
 (************************************************************)
 
 axiomatization where

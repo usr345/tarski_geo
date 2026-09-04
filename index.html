@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формализация геометрии Тарского</title>
+    <meta name="description"
+          content="Формальная разработка элементарной геометрии на основе аксиом Тарского в Isabelle/HOL.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+
+        <a class="site-title" href="index.html">
+            Формализация геометрии Тарского
+        </a>
+
+        <nav class="site-nav" aria-label="Основная навигация">
+            <a href="#project">Проект</a>
+            <a href="#foundations">Основы</a>
+            <a href="#development">Развитие</a>
+            <a href="#results">Результаты</a>
+            <a href="https://github.com/usr345/tarski_geo">Исходный код</a>
+        </nav>
+
+        <div class="language-switch" aria-label="Выбор языка">
+            <a href="index.html" class="active" lang="ru">RU</a>
+            <span>·</span>
+            <a href="index.en.html" lang="en">EN</a>
+        </div>
+
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="container">
+            <p class="eyebrow">Формальная геометрия: Isabelle/HOL, Coq</p>
+
+            <h1>Формализация геометрии Тарского</h1>
+
+            <!-- <p class="lead">
+                 Машинно-проверяемая разработка элементарной геометрии,
+                 построенная из аксиом Тарского.
+                 </p> -->
+        </div>
+    </section>
+
+    <section id="project" class="section">
+        <div class="container">
+            <h2>Проект</h2>
+
+            <p>
+                Наш проект посвящен формализации геометрии Тарского в системах Isabelle/HOL и Coq. Репозиторий проекта: <a href="https://github.com/usr345/tarski_geo">github.com/usr345/tarski_geo</a>.
+            </p>
+
+            <p>
+                Геометрические свойства последовательно выводятся из аксиом и фиксируются в виде машинно-проверяемых доказательств.
+            </p>
+        </div>
+    </section>
+
+    <section id="foundations" class="section section-muted">
+        <div class="container">
+            <h2>Основы</h2>
+
+            <p>
+                В геометрии Тарского есть один базовый тип объектов &mdash; точка.
+                2 базовых отношения:
+                <ul>
+                    <li>одна точка лежит между двух других</li>
+                    <li>2 отрезка конгруэнтны</li>
+                </ul>
+
+            </p>
+
+            <div class="grid grid-4">
+
+                <article class="card">
+                    <h3>Конгруэнтность</h3>
+                    <p>
+                        Свойства конгруэнтности отрезков и
+                        равенства длин.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Между</h3>
+                    <p>
+                        Основные свойства тернарного отношения
+                        расположения точек между друг другом.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Размерность</h3>
+                    <p>
+                        Аксиомы, задающие размерность
+                        геометрической структуры.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Непрерывность</h3>
+                    <p>
+                        Принцип непрерывности, используемый
+                        в формальной разработке.
+                    </p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="development" class="section">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ФОРМАЛЬНАЯ РАЗРАБОТКА</p>
+                    <h2>Развитие</h2>
+                </div>
+
+                <!-- <p class="section-intro">
+                     Теория строится постепенно — от аксиом
+                     к всё более сильным производным результатам.
+                     </p> -->
+            </div>
+
+            <div class="development-list">
+
+                <a class="development-item" href="#">
+                    <span class="item-number">01</span>
+                    <span>
+                        <strong>Аксиомы</strong>
+                        <small>Исходные предположения теории</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">02</span>
+                    <span>
+                        <strong>Конгруэнтность</strong>
+                        <small>Базовые свойства конгруэнтности</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">03</span>
+                    <span>
+                        <strong>Между</strong>
+                        <small>Производные свойства отношения Bet</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">04</span>
+                    <span>
+                        <strong>Построения</strong>
+                        <small>Построение отрезков и единственность</small>
+                    </span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="results" class="section section-muted">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ТЕКУЩИЕ РЕЗУЛЬТАТЫ</p>
+                    <h2>Результаты</h2>
+                </div>
+            </div>
+
+            <div class="result-table">
+
+                <div class="result-row result-header">
+                    <span>Результат</span>
+                    <span>Статус</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>congr_refl</code></span>
+                    <span class="status">Доказано</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>congr_reverse</code></span>
+                    <span class="status">Доказано</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>bet_sym</code></span>
+                    <span class="status">Доказано</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>between_inner_trans</code></span>
+                    <span class="status">Доказано</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>bet_inner_conn</code></span>
+                    <span class="status status-progress">В работе</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="source" class="section">
+        <div class="container narrow">
+
+            <p class="eyebrow">ФОРМАЛИЗАЦИЯ</p>
+
+            <div class="links">
+                <a class="button button-secondary" href="/">
+                    Граф зависимостей
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <span>Формализация геометрии Тарского</span>
+        <span>Isabelle/HOL</span>
+    </div>
+</footer>
+
+</body>
+</html>

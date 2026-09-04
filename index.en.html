@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formalizing Tarski's Geometry</title>
+    <meta name="description"
+          content="A machine-checked formal development of elementary geometry based on Tarski's axioms in Isabelle/HOL.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+
+        <a class="site-title" href="index_en.html">
+            Formalizing Tarski's Geometry
+        </a>
+
+        <nav class="site-nav" aria-label="Main navigation">
+            <a href="#project">Project</a>
+            <a href="#foundations">Foundations</a>
+            <a href="#development">Development</a>
+            <a href="#results">Results</a>
+            <a href="#source">Source</a>
+        </nav>
+
+        <div class="language-switch" aria-label="Language selection">
+            <a href="index.html" lang="ru">RU</a>
+            <span>·</span>
+            <a href="index.en.html" class="active" lang="en">EN</a>
+        </div>
+
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="container">
+            <p class="eyebrow">FORMAL GEOMETRY · ISABELLE/HOL</p>
+
+            <h1>
+                Formalizing<br>
+                Tarski's Geometry
+            </h1>
+
+            <p class="lead">
+                A machine-checked development of elementary geometry
+                built from Tarski's axioms.
+            </p>
+        </div>
+    </section>
+
+    <section id="project" class="section">
+        <div class="container narrow">
+            <h2>The project</h2>
+
+            <p>
+                We develop a formal theory of elementary geometry
+                from a small axiomatic system and verify its proofs
+                in Isabelle/HOL.
+            </p>
+
+            <p>
+                Familiar geometric properties are not taken for granted.
+                They are derived step by step from the axioms and recorded
+                as machine-checked proofs.
+            </p>
+        </div>
+    </section>
+
+    <section id="foundations" class="section section-muted">
+        <div class="container">
+            <h2>Foundations</h2>
+
+            <div class="grid grid-4">
+
+                <article class="card">
+                    <h3>Congruence</h3>
+                    <p>
+                        Properties of segment congruence
+                        and equality of lengths.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Betweenness</h3>
+                    <p>
+                        Basic properties of the ternary
+                        betweenness relation.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Dimension</h3>
+                    <p>
+                        Axioms governing the dimension
+                        of the geometric structure.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <h3>Continuity</h3>
+                    <p>
+                        The continuity principle used
+                        in the formal development.
+                    </p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="development" class="section">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">FORMAL DEVELOPMENT</p>
+                    <h2>Development</h2>
+                </div>
+
+                <p class="section-intro">
+                    The theory is built incrementally, from axioms
+                    to increasingly strong derived results.
+                </p>
+            </div>
+
+            <div class="development-list">
+
+                <a class="development-item" href="#">
+                    <span class="item-number">01</span>
+                    <span>
+                        <strong>Axioms</strong>
+                        <small>Primitive assumptions of the theory</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">02</span>
+                    <span>
+                        <strong>Congruence</strong>
+                        <small>Basic properties of segment congruence</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">03</span>
+                    <span>
+                        <strong>Betweenness</strong>
+                        <small>Derived properties of the Bet relation</small>
+                    </span>
+                </a>
+
+                <a class="development-item" href="#">
+                    <span class="item-number">04</span>
+                    <span>
+                        <strong>Constructions</strong>
+                        <small>Segment construction and uniqueness</small>
+                    </span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="results" class="section section-muted">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">CURRENT RESULTS</p>
+                    <h2>Results</h2>
+                </div>
+            </div>
+
+            <div class="result-table">
+
+                <div class="result-row result-header">
+                    <span>Result</span>
+                    <span>Status</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>congr_refl</code></span>
+                    <span class="status">Verified</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>congr_reverse</code></span>
+                    <span class="status">Verified</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>bet_sym</code></span>
+                    <span class="status">Verified</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>between_inner_trans</code></span>
+                    <span class="status">Verified</span>
+                </div>
+
+                <div class="result-row">
+                    <span><code>bet_inner_conn</code></span>
+                    <span class="status status-progress">In progress</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="source" class="section">
+        <div class="container narrow">
+
+            <p class="eyebrow">FORMALIZATION</p>
+
+            <h2>Source</h2>
+
+            <p>
+                The formal development is written in Isabelle/HOL.
+                Source files and the dependency graph connecting
+                axioms, lemmas, and theorems will be published here.
+            </p>
+
+            <div class="links">
+                <a class="button" href="#">
+                    Source code
+                </a>
+
+                <a class="button button-secondary" href="#">
+                    Dependency graph
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <span>Formalizing Tarski's Geometry</span>
+        <span>Isabelle/HOL</span>
+    </div>
+</footer>
+
+</body>
+</html>
