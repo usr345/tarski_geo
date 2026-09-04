@@ -31,6 +31,7 @@ body {
 
     font-size: 16px;
     line-height: 1.65;
+    padding-bottom: 2em;
 }
 
 a {
@@ -98,7 +99,7 @@ img {
 /* Hero ------------------------------------------------------ */
 
 .hero {
-    padding: 120px 0 0;
+    padding: 2em 0 0;
 }
 
 .eyebrow {
@@ -161,8 +162,6 @@ img {
     justify-content: space-between;
 
     gap: 60px;
-
-    margin-bottom: 50px;
 }
 
 .section-intro {
@@ -338,8 +337,7 @@ code {
 }
 
 .footer-inner {
-    min-height: 100px;
-
+    margin-top: 2em;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -413,4 +411,102 @@ code {
         align-items: flex-start;
         justify-content: center;
     }
+}
+
+.axiom-card {
+    margin: 3em 0 0 0;
+    padding: 28px 30px 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+}
+
+.axiom-card-header {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: baseline;
+}
+
+.axiom-number {
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+.axiom-card h3 {
+    margin: 0;
+
+    font-size: 21px;
+    line-height: 1.25;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+}
+
+.axiom-formula {
+    margin: 28px 0 24px;
+    padding: 20px 22px;
+
+    background: var(--code-background);
+    border-left: 2px solid var(--border);
+
+    font-family:
+        "STIX Two Math",
+        "Cambria Math",
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+    line-height: 1.4;
+}
+
+.axiom-description {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 15px;
+}
+
+.axiom-code {
+    margin-top: 1em;
+    padding: 18px 20px;
+
+    overflow-x: auto;
+
+    background: var(--code-background);
+    border: 1px solid var(--border);
+}
+
+.axiom-code code {
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.axiom-visual {
+    display: grid;
+    grid-template-columns: 30% 70%;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+@media (max-width: 700px) {
+    .axiom-visual {
+        grid-template-columns: 1fr;
+    }
+}
+
+.axiom-visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.axiom-visual .axiom-code {
+    margin: 0;
+    overflow-x: auto;
 }

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формализация геометрии Тарского</title>
+    <meta name="description"
+          content="Формальная разработка элементарной геометрии на основе аксиом Тарского в Isabelle/HOL.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+
+        <a class="site-title" href="index.html">
+            Формализация геометрии Тарского
+        </a>
+
+        <nav class="site-nav" aria-label="Основная навигация">
+            <a href="/">Главная</a>
+            <a href="https://github.com/usr345/tarski_geo">Исходный код</a>
+        </nav>
+
+        <div class="language-switch" aria-label="Выбор языка">
+            <a href="axioms.html" class="active" lang="ru">RU</a>
+            <span>·</span>
+            <a href="axioms.en.html" lang="en">EN</a>
+        </div>
+
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="container">
+            <p class="eyebrow">Формальная геометрия: Isabelle/HOL, Coq</p>
+
+            <h1>Аксиомы</h1>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A1</span>
+                    <h3>Псевдорефлексивность конгруэнтности</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A B, Congr(A,B,B,A)
+                </div>
+
+                <p class="axiom-description">
+                    Для любых двух точек A и B отрезок AB конгруэнтен отрезку BA. Это исходное свойство отношения конгруэнтности, из которого впоследствии выводятся его симметрия и рефлексивность.
+                </p>
+
+                <pre class="axiom-code"><code>axiomatization where
+  congr_pseudo_refl:
+    "\&lt;And&gt;A B. Congr A B B A"</code></pre>
+
+            </article>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A2</span>
+                    <h3>Внутренняя транзитивность конгруэнтности</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A B C D E F, Congr(A,B,C,D) &#8594; Congr(A,B,E,F) &#8594; Congr(C,D,E,F)
+                </div>
+
+                <p class="axiom-description">
+                    Если отрезки C D и E F конгруэнтны отрезку A B, то они конгруэнтны друг другу.
+                </p>
+
+                <pre class="axiom-code"><code>axiomatization where
+  congr_inner_transitivity:
+    "\<And>A B C D E F.
+       Congr A B C D \<Longrightarrow>
+       Congr A B E F \<Longrightarrow>
+       Congr C D E F"</code></pre>
+
+            </article>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A3</span>
+                    <h3>Тождество конгруэнтности</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A B C, Congr(A,B,C,C) &#8594; A = B
+                </div>
+
+                <p class="axiom-description">
+                    Если отрезок AB конгруэнтен вырожденному отрезку CC, то A и B совпадают.
+                </p>
+
+                <pre class="axiom-code"><code>axiomatization where
+  congr_id:
+    "\<And>A B C.
+       Congr A B C C \<Longrightarrow>
+       A = B"</code></pre>
+
+            </article>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A4</span>
+                    <h3>Тождество between</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A B, Bet A B A &#8594; A = B
+                </div>
+
+                <p class="axiom-description">
+                    Если Bet A B A, то A = B
+                </p>
+
+                <pre class="axiom-code"><code>axiomatization where
+  bet_id:
+    "\<And>A B.
+       Bet A B A \<Longrightarrow>
+       A = B"</code></pre>
+
+            </article>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A5</span>
+                    <h3>Аксиома Паша</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A B C P Q, Bet A P C &#8594; Bet B Q C &#8594; &exist; X, Bet P X B &and; Bet Q X A
+                </div>
+
+                <p class="axiom-description">
+                    Если P лежит между A и C, а Q &mdash; между B и C, то отрезки P B и Q A пересекаются в некоторой точке X.
+                </p>
+
+                <div class="axiom-visual">
+                    <div>
+                        <img src="/images/pasch.svg" alt="Иллюстрация аксиомы Паша">
+                    </div>
+                    <pre class="axiom-code"><code>axiomatization where
+  inner_pasch:
+    "\<And>A B C P Q.
+       Bet A P C \<Longrightarrow>
+       Bet B Q C \<Longrightarrow>
+       \<exists>X.
+         Bet P X B \<and>
+         Bet Q X A"</code></pre>
+                </div>
+            </article>
+
+            <article class="axiom-card">
+
+                <header class="axiom-card-header">
+                    <span class="axiom-number">A6</span>
+                    <h3>Аксиома о пяти отрезках</h3>
+                </header>
+
+                <div class="axiom-formula">
+                    ∀ A A' B B' C C' D D', A &ne; B
+                </div>
+
+                <pre class="axiom-code"><code>axiomatization where
+  five_segment:
+    "\<And>A A' B B' C C' D D'.
+       Congr A B A' B' \<Longrightarrow>
+       Congr B C B' C' \<Longrightarrow>
+       Congr A D A' D' \<Longrightarrow>
+       Congr B D B' D' \<Longrightarrow>
+       Bet A B C \<Longrightarrow>
+       Bet A' B' C' \<Longrightarrow>
+       A \<noteq> B \<Longrightarrow>
+       Congr C D C' D'"</code></pre>
+            </article>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

@@ -40,21 +40,32 @@ axiomatization where
        Congr A B C C \<Longrightarrow>
        A = B"
 
-
 (************************************************************)
-(* A4. Segment construction                                *)
+(* A4. Identity of betweenness                              *)
 (************************************************************)
 
 axiomatization where
-  segment_construction:
-    "\<And>A B C D.
-       \<exists>E.
-         Bet A B E \<and>
-         Congr B E C D"
+  bet_id:
+    "\<And>A B.
+       Bet A B A \<Longrightarrow>
+       A = B"
 
 
 (************************************************************)
-(* A5. Five segment axiom                                  *)
+(* A5. Inner Pasch                                         *)
+(************************************************************)
+
+axiomatization where
+  inner_pasch:
+    "\<And>A B C P Q.
+       Bet A P C \<Longrightarrow>
+       Bet B Q C \<Longrightarrow>
+       \<exists>X.
+         Bet P X B \<and>
+         Bet Q X A"
+
+(************************************************************)
+(* A6. Five segment axiom                                  *)
 (************************************************************)
 
 axiomatization where
@@ -69,34 +80,8 @@ axiomatization where
        A \<noteq> B \<Longrightarrow>
        Congr C D C' D'"
 
-
 (************************************************************)
-(* A6. Identity of betweenness                              *)
-(************************************************************)
-
-axiomatization where
-  bet_id:
-    "\<And>A B.
-       Bet A B A \<Longrightarrow>
-       A = B"
-
-
-(************************************************************)
-(* A7. Inner Pasch                                         *)
-(************************************************************)
-
-axiomatization where
-  inner_pasch:
-    "\<And>A B C P Q.
-       Bet A P C \<Longrightarrow>
-       Bet B Q C \<Longrightarrow>
-       \<exists>X.
-         Bet P X B \<and>
-         Bet Q X A"
-
-
-(************************************************************)
-(* A8. Lower dimension                                    *)
+(* A7. Lower dimension                                    *)
 (************************************************************)
 
 axiomatization where
@@ -108,7 +93,7 @@ axiomatization where
 
 
 (************************************************************)
-(* A9. Upper dimension                                    *)
+(* A8. Upper dimension                                    *)
 (************************************************************)
 
 axiomatization where
@@ -124,7 +109,7 @@ axiomatization where
 
 
 (************************************************************)
-(* A10. Dedekind continuity                               *)
+(* A9. Dedekind continuity                               *)
 (************************************************************)
 
 axiomatization where
@@ -141,5 +126,16 @@ axiomatization where
             Xi X \<longrightarrow>
             Upsilon Y \<longrightarrow>
             Bet X B Y)"
+
+(************************************************************)
+(* A10. Segment construction                                *)
+(************************************************************)
+
+axiomatization where
+  segment_construction:
+    "\<And>A B C D.
+       \<exists>E.
+         Bet A B E \<and>
+         Congr B E C D"
 
 end
