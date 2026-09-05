@@ -13,7 +13,7 @@ proof -
   show "Congr A B A B" using L1 L1  by (rule congr_inner_transitivity)
 qed
 
-lemma congr_reverse:
+lemma congr_sym:
   fixes A B C D :: Point
   shows "Congr A B C D \<Longrightarrow> Congr C D A B"
 proof -
@@ -29,7 +29,7 @@ lemma congr_reverse_id:
 proof -
   assume H: "Congr A A C D"
 
-  have L1: "Congr C D A A"  by (rule congr_reverse [OF H])
+  have L1: "Congr C D A A"  by (rule congr_sym [OF H])
   show "C = D" by (rule congr_id [OF L1])
 qed
 
@@ -40,9 +40,87 @@ proof -
   assume H1: "Congr A B C D"
   assume H2: "Congr C D E F"
 
-  have H3: "Congr C D A B" by (rule congr_reverse [OF H1])
+  have H3: "Congr C D A B" by (rule congr_sym [OF H1])
 
   show "Congr A B E F" by (rule congr_inner_transitivity [OF H3 H2])
+qed
+
+lemma congr_left_comm:
+  fixes A B C D :: Point
+  shows "Congr A B C D \<Longrightarrow> Congr B A C D"
+proof -
+  assume H1: "Congr A B C D"
+
+  have H2: "Congr A B B A" by (rule  congr_pseudo_refl [of A B])
+  show "Congr B A C D" by (rule congr_inner_transitivity [OF H2 H1])
+qed
+
+lemma congr_right_comm:
+  fixes A B C D :: Point
+  shows "Congr A B C D \<Longrightarrow> Congr A B D C"
+proof -
+  assume H1: "Congr A B C D"
+
+  have H2: "Congr C D A B" by (rule congr_sym [OF H1])
+  have H3: "Congr C D D C" by (rule  congr_pseudo_refl [of C D])
+
+  show "Congr A B D C" by (rule congr_inner_transitivity [OF H2 H3])
+qed
+
+lemma congr_reverse:
+  fixes A B C D :: Point
+  shows "Congr A B C D \<Longrightarrow> Congr B A D C"
+proof -
+  assume H1: "Congr A B C D"
+
+  have H2: "Congr B A C D" by (rule  congr_left_comm [OF H1])
+  show "Congr B A D C" by (rule  congr_right_comm [OF H2])
+qed
+
+lemma congr_trivial_identity: 
+  fixes A B :: Point
+  shows "Congr A A B B"
+proof -
+  have H1: "\<exists>E. Bet A A E \<and> Congr A E B B" by (rule segment_construction [of A A B B])
+  obtain E where
+    H2: "Bet A A E" and
+    H3: "Congr A E B B"
+    using H1  by blast
+
+  have H4: "A = E" by (rule congr_id [OF H3])
+  show "Congr A A B B" using H4 H3 by (rule ssubst)
+qed
+
+lemma congr_summa:
+  fixes A B C A' B' C' :: Point
+  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A B A' B' \<Longrightarrow> 
+          Congr B C B' C' \<Longrightarrow> Congr A C A' C'"
+proof -
+  assume H1: "Bet A B C"
+  assume H2: "Bet A' B' C'"
+  assume H3: "Congr A B A' B'"
+  assume H4: "Congr B C B' C'"
+
+  show "Congr A C A' C'"
+  proof (cases "A = B")
+
+    assume Heq: "A = B"
+
+    have H5: "Congr A C B' C'" using Heq H4 by (rule ssubst)
+    have H6: "Congr B B A' B'" using Heq H3 by (rule subst)
+    have H7: "Congr A' B' B B" by (rule congr_sym [OF H6])
+    have Heq': "A' = B'" by (rule congr_id [OF H7])
+
+    show "Congr A C A' C'" using Heq' H5 by (rule ssubst)
+  next
+
+    assume Hneq: "A \<noteq> B"
+    have H5: "Congr A A A' A'" by (rule congr_trivial_identity [of A A'])
+    have H6: "Congr B A B' A'" by (rule congr_reverse [OF H3])
+    have H7:  "Congr C A C' A'" using H3 H4 H5 H6 H1 H2 Hneq by (rule five_segment)
+    
+    show "Congr A C A' C'" by (rule congr_reverse [OF H7])
+  qed
 qed
 
 lemma bet_right:
@@ -176,33 +254,6 @@ proof -
   show Goal: "Bet A B C" using L2 by (rule bet_sym)
 qed
 
-lemma bet_exchange3:
-  "Bet A B C \<Longrightarrow> Bet A C D \<Longrightarrow> Bet B C D"
-proof -
-  assume H1: "Bet A B C"
-  assume H2: "Bet A C D"
-
-  have L1: "Bet D C A"
-    using H2 by (rule bet_sym)
-
-  have L2: "Bet C B A"
-    using H1 by (rule bet_sym)
-
-  have construction:"\<exists>X. Bet C X C \<and> Bet B X D"
-    using L1 L2 by (rule inner_pasch)
-
- obtain X where
-    L3: "Bet C X C" and
-    L4: "Bet B X D"
-   using construction by metis
-
-  have L5: "C = X"
-    using L3 by (rule bet_id)
-
-  show Goal: "Bet B C D"
-    using L5 L4 by (rule ssubst)
-qed
-
 lemma construction_uniqueness:
   "Q \<noteq> A \<Longrightarrow> Bet Q A X \<Longrightarrow>  Congr A X B C \<Longrightarrow> Bet Q A Y \<Longrightarrow> Congr A Y B C \<Longrightarrow> X = Y"
 proof -
@@ -213,7 +264,7 @@ proof -
   assume H5: "Congr A Y B C"
 
   have L1: "Congr B C A Y"
-    using H5 by (rule congr_reverse)
+    using H5 by (rule congr_sym)
 
   have L2: "Congr A X A Y" by (rule congr_trans [OF H3 L1])
 
@@ -246,17 +297,18 @@ proof -
     L2: "Congr C X C D"
      using segment_construction by blast
 
-  have L3: "Congr C D C X" by (rule congr_reverse [OF L2])
+  have L3: "Congr C D C X" by (rule congr_sym [OF L2])
 
-  have L4: "Bet B C X" by (rule bet_exchange3 [OF H1 L1])
+  have L4: "Bet C B A" by (rule bet_sym [OF H1])
+  have L5: "Bet B C X" by (rule CBA_BCD [OF L4 L1])
 
-  have L5: "Congr C X C X" by (rule congr_refl [of C X])
+  have L6: "Congr C X C X" by (rule congr_refl [of C X])
 
-  have L6: "D = X"
-    using H3 H2 L3 L4 L5 by (rule construction_uniqueness)
+  have L7: "D = X"
+    using H3 H2 L3 L5 L6 by (rule construction_uniqueness)
 
   show Goal: "Bet A C D"
-    using L6 L1 by (rule ssubst)
+    using L7 L1 by (rule ssubst)
 qed
 
 lemma between_exchange2:
@@ -321,25 +373,24 @@ proof -
   assume H1: "Bet A B C"
   assume H2: "Bet A C D"
 
-  have L1: "Bet B C D"
-    using H1 H2
-    by (rule bet_exchange3)
+  have L1: "Bet C B A" by (rule bet_sym [OF H1])
+  have L2: "Bet B C D" by (rule CBA_BCD [OF L1 H2])
 
   show "Bet A B D"
   proof (cases "B = C")
 
-    assume L2: "B = C"
+    assume L3: "B = C"
 
     show Goal: "Bet A B D"
-      using H2 L2
-      by (subst L2)
+      using H2 L3
+      by (subst L3)
 
   next
 
-    assume L2: "B \<noteq> C"
+    assume L3: "B \<noteq> C"
 
     show Goal: "Bet A B D"
-      using H1 L1 L2
+      using H1 L2 L3
       by (rule bet_outer_trans)
 
   qed
@@ -374,7 +425,7 @@ proof -
     by (rule contrapos_nn [OF H2 H3])
 qed
 
-lemma not_bet_not:
+lemma not_bet_not_eq:
   "\<not> Bet A B C \<Longrightarrow> B \<noteq> C"
 proof -
   assume H1: "\<not> Bet A B C"
@@ -390,8 +441,8 @@ proof -
     show False
         using H2 H3
         by (rule notE)
-    qed
   qed
+qed
 
 (*
 lemma not_bet_ABC:
@@ -417,17 +468,20 @@ proof -
   assume H2: "Bet A C D"
 
   show "Bet A B C \<or> Bet A C B"
-  proof (cases "B = C")
+  proof (cases "Bet A B C")
 
-    assume Heq: "B = C"
-
-    have L2: "Bet A B B" by (rule bet_right)
-    have L3: "Bet A B C"
-      using Heq L2 by (rule subst)
+    assume H3: "Bet A B C"
 
     show Goal: "Bet A B C \<or> Bet A C B"
-      using L3 by (rule disjI1)
+      using H3 by (rule disjI1)
   next
-    assume Hneq: "B \<noteq> C"
+    assume H3: "\<not> Bet A B C"
+
+    have H4: "B \<noteq> C" by (rule not_bet_not_eq [OF H3])
+    have H5: "\<not> Bet B C D" by (rule contra_inner_trans [OF H1 H3])
+
+    have H6: "\<not> Bet C B A" by (rule not_bet_sym [OF H3])
+    have H7: "B \<noteq> A" by (rule not_bet_not_eq [OF H6])
+    have H8: "C \<noteq> D" by (rule not_bet_not_eq [OF H5])
 
 end
