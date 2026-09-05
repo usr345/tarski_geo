@@ -27,10 +27,22 @@ lemma congr_reverse_id:
   fixes A B C D :: Point
   shows "Congr A A C D \<Longrightarrow> C = D"
 proof -
-   assume H: "Congr A A C D"
+  assume H: "Congr A A C D"
 
   have L1: "Congr C D A A"  by (rule congr_reverse [OF H])
   show "C = D" by (rule congr_id [OF L1])
+qed
+
+lemma congr_trans:
+  fixes A B C D E F :: Point
+  shows "Congr A B C D \<Longrightarrow> Congr C D E F \<Longrightarrow> Congr A B E F"
+proof -
+  assume H1: "Congr A B C D"
+  assume H2: "Congr C D E F"
+
+  have H3: "Congr C D A B" by (rule congr_reverse [OF H1])
+
+  show "Congr A B E F" by (rule congr_inner_transitivity [OF H3 H2])
 qed
 
 lemma bet_right:
@@ -39,7 +51,7 @@ lemma bet_right:
 proof -
 
  have L0: "\<exists>E. Bet A B E \<and> Congr B E B B"
-  using segment_construction [of A B B B] by this
+   using segment_construction [of A B B B] by this
 
  obtain E where
   H1: "Bet A B E" and
@@ -200,26 +212,22 @@ proof -
   assume H4: "Bet Q A Y"
   assume H5: "Congr A Y B C"
 
-  have L1: "Congr B C A X"
-    using H3 by (rule congr_reverse)
-
-  have L2: "Congr B C A Y"
+  have L1: "Congr B C A Y"
     using H5 by (rule congr_reverse)
 
-  have L3: "Congr A X A Y"
-    using L1 L2 by (rule congr_inner_transitivity)
+  have L2: "Congr A X A Y" by (rule congr_trans [OF H3 L1])
 
-  have L4: "Congr Q A Q A"
+  have L3: "Congr Q A Q A"
     by (rule congr_refl)
 
-  have L5: "Congr Q Y Q Y"
+  have L4: "Congr Q Y Q Y"
     by (rule congr_refl)
 
-  have L6: "Congr A Y A Y"
+  have L5: "Congr A Y A Y"
     by (rule congr_refl)
 
   have L7: "Congr X Y Y Y"
-    using L4 L3 L5 L6 H2 H4 H1
+    using L3 L2 L4 L5 H2 H4 H1
       by (rule five_segment)
 
   show "X = Y"
@@ -366,6 +374,26 @@ proof -
     by (rule contrapos_nn [OF H2 H3])
 qed
 
+lemma not_bet_not:
+  "\<not> Bet A B C \<Longrightarrow> B \<noteq> C"
+proof -
+  assume H1: "\<not> Bet A B C"
+  show "B \<noteq> C"
+  proof
+    assume Heq: "B = C"
+
+    have H2: "\<not> Bet A C C" 
+      using Heq H1 by (rule subst)
+
+    have H3: "Bet A C C" by (rule bet_right [of A C])
+
+    show False
+        using H2 H3
+        by (rule notE)
+    qed
+  qed
+
+(*
 lemma not_bet_ABC:
   "Bet A B D \<Longrightarrow> \<not> Bet B C D \<Longrightarrow> \<not> Bet A B C"
 
@@ -380,7 +408,7 @@ lemma not_bet_ABC:
 
 lemma not_bet_ACD:
   "Bet A B C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A C D"
-
+*)
 
 lemma bet_inner_conn:
   "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
