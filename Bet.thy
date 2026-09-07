@@ -61,6 +61,62 @@ proof -
     using L1 by (rule bet_sym)
 qed
 
+lemma two_distinct_points: "\<exists> (A :: Point) . \<exists> (B :: Point). A \<noteq> B"
+proof -
+  have H1:  "\<exists>A B C.
+       \<not> Bet A B C \<and>
+       \<not> Bet B C A \<and>
+       \<not> Bet C A B" by (rule lower_dim)
+
+  obtain A B C where
+    not_ABC: "\<not> Bet A B C" and
+    not_BCA: "\<not> Bet B C A" and
+    not_CAB: "\<not> Bet C A B"
+    using H1 by blast
+
+  show "\<exists> (A :: Point) . \<exists> (B :: Point). A \<noteq> B"
+  proof (cases "A = B")
+
+    assume Heq: "A = B"
+    have BBC: "Bet B B C" by (rule bet_left [of B C])
+    have not_BBC: "\<not> Bet B B C" using Heq not_ABC by (rule subst)
+
+    then show ?thesis using BBC by contradiction
+  next
+
+    assume Hneq: "A \<noteq> B"
+    have H1: "\<exists> (B :: Point). A \<noteq> B" using Hneq by (rule exI [of _ B])
+    show "\<exists> (A :: Point). \<exists> (B :: Point). A \<noteq> B" using H1 by (rule exI [of _ A])
+  qed
+qed
+
+lemma point_contruction_different:
+  fixes A B :: Point
+  shows "\<exists> C . Bet A B C \<and> B \<noteq> C"
+proof -
+  have H1: "\<exists> (A :: Point) . \<exists> (B :: Point). A \<noteq> B" by (rule two_distinct_points)
+  obtain D E :: Point where
+    Hneq: "D \<noteq> E"
+    using H1 by blast
+
+  have H2: "\<exists> F. Bet A B F \<and> Congr B F C D" by (rule segment_construction [of A B C D])
+
+
+lemma l4_2:
+  fixes A B C D A' B' C' D' :: Point
+  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> 
+         Congr B C B' C' \<Longrightarrow> Congr A D A' D' \<Longrightarrow> Congr C D C' D'"
+proof -
+  assume H1: "Bet A B C"
+  assume H2: "Bet A' B' C'"
+  assume H3: "Congr A C A' C'"
+  assume H4: "Congr B C B' C'"
+  assume H5: "Congr A D A' D'"
+
+  show ?thesis
+  proof (cases "A = C")
+
+
 lemma CBA_BCD:
   "Bet C B A \<Longrightarrow> Bet A C D \<Longrightarrow> Bet B C D"
 proof -
@@ -200,7 +256,7 @@ proof -
 
     assume L1: "B = C"
 
-    show L2: "Bet A C D"
+    show "Bet A C D"
       using L1 H1
       by (rule subst)
 
