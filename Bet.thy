@@ -95,12 +95,30 @@ lemma point_contruction_different:
   shows "\<exists> C . Bet A B C \<and> B \<noteq> C"
 proof -
   have H1: "\<exists> (A :: Point) . \<exists> (B :: Point). A \<noteq> B" by (rule two_distinct_points)
-  obtain D E :: Point where
-    Hneq: "D \<noteq> E"
+  obtain C D :: Point where
+    C_neq_D: "C \<noteq> D"
     using H1 by blast
 
-  have H2: "\<exists> F. Bet A B F \<and> Congr B F C D" by (rule segment_construction [of A B C D])
+  have H2: "\<exists> E. Bet A B E \<and> Congr B E C D" by (rule segment_construction [of A B C D])
+  obtain E :: Point where
+    H3: "Bet A B E" and
+    H4: "Congr B E C D"
+    using H2 by blast
 
+  have B_ne_E: "B \<noteq> E"
+  proof
+    assume B_eq_E: "B = E"
+
+    have H5: "Congr E E C D" using B_eq_E H4 by (rule subst)
+    have H6: "Congr C D E E" by (rule congr_sym [OF H5])
+    have C_eq_D: "C = D" using H6 by (rule congr_id)
+    from C_neq_D C_eq_D show False
+      by (rule notE)
+  qed
+
+  have Conj: "Bet A B E \<and> B \<noteq> E" by (rule conjI [OF H3 B_ne_E])
+  show "\<exists> C . Bet A B C \<and> B \<noteq> C" using Conj by (rule exI [of _ E])
+qed
 
 lemma l4_2:
   fixes A B C D A' B' C' D' :: Point
