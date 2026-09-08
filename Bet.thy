@@ -90,7 +90,7 @@ proof -
   qed
 qed
 
-lemma point_contruction_different:
+lemma point_construction_different:
   fixes A B :: Point
   shows "\<exists> C . Bet A B C \<and> B \<noteq> C"
 proof -
@@ -205,7 +205,7 @@ proof -
     show "Congr B D B' D'" using C1_eq_B1 H8 by (rule subst)
   next
     assume A_neq_C: "A \<noteq> C"
-    have H7: "\<exists> E . Bet A C E \<and> C \<noteq> E" by (rule point_contruction_different [of A C])
+    have H7: "\<exists> E . Bet A C E \<and> C \<noteq> E" by (rule point_construction_different [of A C])
     obtain E :: Point where
       ACE: "Bet A C E" and
       H9: "C \<noteq> E"
@@ -235,6 +235,11 @@ proof -
     show "Congr B D B' D'" using H14 H15 ED_co_E1D1 H6 ECB E1C1B1 E_neq_C by (rule five_segment)
   qed
 qed
+
+lemma l4_3:
+  fixes A B C A' B' C' :: Point
+  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Cong B C B' C' \<Longrightarrow> Cong A B A' B'"
+proof -
 
 lemma bet_inner_trans:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
