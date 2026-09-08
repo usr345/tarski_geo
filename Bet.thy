@@ -120,21 +120,6 @@ proof -
   show "\<exists> C . Bet A B C \<and> B \<noteq> C" using Conj by (rule exI [of _ E])
 qed
 
-lemma l4_2:
-  fixes A B C D A' B' C' D' :: Point
-  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> 
-         Congr B C B' C' \<Longrightarrow> Congr A D A' D' \<Longrightarrow> Congr C D C' D'"
-proof -
-  assume H1: "Bet A B C"
-  assume H2: "Bet A' B' C'"
-  assume H3: "Congr A C A' C'"
-  assume H4: "Congr B C B' C'"
-  assume H5: "Congr A D A' D'"
-
-  show ?thesis
-  proof (cases "A = C")
-
-
 lemma CBA_BCD:
   "Bet C B A \<Longrightarrow> Bet A C D \<Longrightarrow> Bet B C D"
 proof -
@@ -189,6 +174,66 @@ proof -
 
   show Goal: "B = C" using L5 L6 by metis
 
+qed
+
+lemma l4_2:
+  fixes A B C D A' B' C' D' :: Point
+  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> 
+         Congr B C B' C' \<Longrightarrow> Congr A D A' D' \<Longrightarrow> Congr C D C' D' \<Longrightarrow> Congr B D B' D'"
+proof -
+  assume H1: "Bet A B C"
+  assume H2: "Bet A' B' C'"
+  assume H3: "Congr A C A' C'"
+  assume H4: "Congr B C B' C'"
+  assume H5: "Congr A D A' D'"
+  assume H6: "Congr C D C' D'"
+
+  show ?thesis
+  proof (cases "A = C")
+    assume A_eq_C: "A = C"
+    have H7: "Bet C B C" using A_eq_C H1 by (rule subst)
+    have C_eq_B: "C = B" by (rule bet_id [OF H7])
+
+    have H8: "Congr B D C' D'" using C_eq_B H6 by (rule subst)
+    have H9: "Congr C C A' C'" using A_eq_C H3 by (rule subst)
+    then have H10: "Congr A' C' C C" by (rule congr_sym)
+
+    have A1_eq_C1: "A' = C'" by (rule congr_id [OF H10])
+    have H11: "Bet C' B' C'" using A1_eq_C1 H2 by (rule subst)
+    have C1_eq_B1: "C' = B'" by (rule bet_id [OF H11])
+
+    show "Congr B D B' D'" using C1_eq_B1 H8 by (rule subst)
+  next
+    assume A_neq_C: "A \<noteq> C"
+    have H7: "\<exists> E . Bet A C E \<and> C \<noteq> E" by (rule point_contruction_different [of A C])
+    obtain E :: Point where
+      ACE: "Bet A C E" and
+      H9: "C \<noteq> E"
+      using H7 by blast
+
+    have H10: "\<exists> E' . Bet A' C' E' \<and> Congr C' E' C E" by (rule segment_construction [of A' C' C E])
+    obtain E' :: Point where
+      H11: "Bet A' C' E'" and
+      H12: "Congr C' E' C E"
+      using H10 by blast
+
+    have H13: "Congr C E C' E'" by (rule congr_sym [OF H12])
+    have ED_co_E1D1: "Congr E D E' D'" using H3 H13 H5 H6 ACE H11 A_neq_C by (rule five_segment)
+
+    have H14: "Congr E C E' C'" by (rule congr_reverse [OF H13])
+    have H15: "Congr C B C' B'" by (rule congr_reverse [OF H4])
+
+    have CBA: "Bet C B A" by (rule bet_sym [OF H1])
+    have H16: "Bet B C E" by (rule CBA_BCD [OF CBA ACE])
+    have ECB: "Bet E C B" by (rule bet_sym [OF H16])
+
+    have C1B1A1: "Bet C' B' A'" by (rule bet_sym [OF H2])
+    have H17: "Bet B' C' E'" by (rule CBA_BCD [OF C1B1A1 H11])
+    have E1C1B1: "Bet E' C' B'" by (rule bet_sym [OF H17])
+
+    have E_neq_C: "E \<noteq> C" by (rule H9[symmetric])
+    show "Congr B D B' D'" using H14 H15 ED_co_E1D1 H6 ECB E1C1B1 E_neq_C by (rule five_segment)
+  qed
 qed
 
 lemma bet_inner_trans:
