@@ -242,27 +242,15 @@ lemma l4_3:
 proof -
   assume ABC: "Bet A B C"
   assume ABC1: "Bet A' B' C'"
-  assume AC_A1C1: "Congr A C A' C'"
-  assume BC_B1C1: "Congr B C B' C'"
+  assume AC_AC1: "Congr A C A' C'"
+  assume BC_BC1: "Congr B C B' C'"
 
-  have H1: "\<exists>D. Bet C A D \<and> Congr A D B C" by (rule segment_construction [of C A B C])
-  obtain D :: Point where
-    CAD: "Bet C A D" and
-    AD_BC: "Congr A D B C"
-    using H1 by blast
+  have AA_AA1: "Congr A A A' A'" by (rule congr_trivial_identity [of A A'])
+  have CA_CA1: "Congr C A C' A'" by (rule congr_reverse [OF AC_AC1])
 
-  have H2: "\<exists>D'. Bet C' A' D' \<and> Congr A' D' B C" by (rule segment_construction [of C' A' B C])
-  obtain D' :: Point where
-    CAD_1: "Bet C' A' D'" and
-    AD_BC_1: "Congr A' D' B C"
-    using H2 by blast
-
-  have BC_AD_1: "Congr B C A' D'" by (rule congr_sym [OF AD_BC_1])
-  have H2: "Congr A D A' D'" by (rule congr_trans [OF AD_BC BC_AD_1])
-
-  have DAC: "Bet D A C" by (rule bet_sym [OF CAD])
-  have DAC_1: "Bet D' A' C'" by (rule bet_sym [OF CAD_1])
-
+  have H1: "Congr B A B' A'" by (rule l4_2 [OF ABC ABC1 AC_AC1 BC_BC1 AA_AA1 CA_CA1])
+  show "Congr A B A' B'" by (rule congr_reverse [OF H1])
+qed
   
 lemma bet_inner_trans:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
