@@ -257,12 +257,13 @@ proof -
     AD_BC_1: "Congr A' D' B C"
     using H2 by blast
 
-  have BC_A1D1: "Congr B C A' D'" by (rule congr_sym [OF AD_BC_1])
-  have H2: "Congr A D A' D'" by (rule congr_trans [OF AD_BC BC_A1D1])
+  have BC_AD_1: "Congr B C A' D'" by (rule congr_sym [OF AD_BC_1])
+  have H2: "Congr A D A' D'" by (rule congr_trans [OF AD_BC BC_AD_1])
 
   have DAC: "Bet D A C" by (rule bet_sym [OF CAD])
-  have DAC: "Bet D A C" by (rule bet_sym [OF CAD])
+  have DAC_1: "Bet D' A' C'" by (rule bet_sym [OF CAD_1])
 
+  
 lemma bet_inner_trans:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
 proof -
