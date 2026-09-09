@@ -238,8 +238,30 @@ qed
 
 lemma l4_3:
   fixes A B C A' B' C' :: Point
-  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Cong B C B' C' \<Longrightarrow> Cong A B A' B'"
+  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Congr B C B' C' \<Longrightarrow> Congr A B A' B'"
 proof -
+  assume ABC: "Bet A B C"
+  assume ABC1: "Bet A' B' C'"
+  assume AC_A1C1: "Congr A C A' C'"
+  assume BC_B1C1: "Congr B C B' C'"
+
+  have H1: "\<exists>D. Bet C A D \<and> Congr A D B C" by (rule segment_construction [of C A B C])
+  obtain D :: Point where
+    CAD: "Bet C A D" and
+    AD_BC: "Congr A D B C"
+    using H1 by blast
+
+  have H2: "\<exists>D'. Bet C' A' D' \<and> Congr A' D' B C" by (rule segment_construction [of C' A' B C])
+  obtain D' :: Point where
+    CAD_1: "Bet C' A' D'" and
+    AD_BC_1: "Congr A' D' B C"
+    using H2 by blast
+
+  have BC_A1D1: "Congr B C A' D'" by (rule congr_sym [OF AD_BC_1])
+  have H2: "Congr A D A' D'" by (rule congr_trans [OF AD_BC BC_A1D1])
+
+  have DAC: "Bet D A C" by (rule bet_sym [OF CAD])
+  have DAC: "Bet D A C" by (rule bet_sym [OF CAD])
 
 lemma bet_inner_trans:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
