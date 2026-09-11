@@ -88,36 +88,4 @@ proof -
   show "Congr A A B B" using H4 H3 by (rule ssubst)
 qed
 
-lemma congr_summa:
-  fixes A B C A' B' C' :: Point
-  shows "Bet A B C \<Longrightarrow> Bet A' B' C' \<Longrightarrow> Congr A B A' B' \<Longrightarrow> 
-          Congr B C B' C' \<Longrightarrow> Congr A C A' C'"
-proof -
-  assume H1: "Bet A B C"
-  assume H2: "Bet A' B' C'"
-  assume H3: "Congr A B A' B'"
-  assume H4: "Congr B C B' C'"
-
-  show "Congr A C A' C'"
-  proof (cases "A = B")
-
-    assume Heq: "A = B"
-
-    have H5: "Congr A C B' C'" using Heq H4 by (rule ssubst)
-    have H6: "Congr B B A' B'" using Heq H3 by (rule subst)
-    have H7: "Congr A' B' B B" by (rule congr_sym [OF H6])
-    have Heq': "A' = B'" by (rule congr_id [OF H7])
-
-    show "Congr A C A' C'" using Heq' H5 by (rule ssubst)
-  next
-
-    assume Hneq: "A \<noteq> B"
-    have H5: "Congr A A A' A'" by (rule congr_trivial_identity [of A A'])
-    have H6: "Congr B A B' A'" by (rule congr_reverse [OF H3])
-    have H7:  "Congr C A C' A'" using H3 H4 H5 H6 H1 H2 Hneq by (rule five_segment)
-    
-    show "Congr A C A' C'" by (rule congr_reverse [OF H7])
-  qed
-qed
-
 end
