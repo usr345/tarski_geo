@@ -34,7 +34,7 @@ postulate
 ------------------------------------------------------------------------
 
 postulate
-  congr-inner-transitivity :
+  congr-inner-trans :
     ∀ {A B C D E F : Point} →
       Congr A B C D →
       Congr A B E F →
@@ -177,6 +177,6 @@ postulate
 ------------------------------------------------------------------------
 
 postulate
-  excluded-middle :
+  LEM :
     ∀ (A : Set) →
       A ⊎ ¬ A
