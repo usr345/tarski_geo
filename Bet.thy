@@ -120,7 +120,7 @@ proof -
   show "\<exists> C . Bet A B C \<and> B \<noteq> C" using Conj by (rule exI [of _ E])
 qed
 
-lemma CBA_BCD:
+lemma CBA_ACD_BCD:
   "Bet C B A \<Longrightarrow> Bet A C D \<Longrightarrow> Bet B C D"
 proof -
   assume H1: "Bet C B A"
@@ -176,7 +176,7 @@ proof -
 
 qed
 
-lemma bet_inner_trans:
+lemma ABD_BCD_ABC:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
 proof -
   assume H1: "Bet A B D"
@@ -186,7 +186,7 @@ proof -
     using H1 by (rule bet_sym)
 
   have L2: "Bet C B A"
-    using H2 L1 by (rule CBA_BCD)
+    using H2 L1 by (rule CBA_ACD_BCD)
 
   show Goal: "Bet A B C" using L2 by (rule bet_sym)
 qed
@@ -222,6 +222,21 @@ proof -
     using L7 by (rule congr_id)
 qed
 
+lemma ABD_ABC_BCD:
+  "Bet A B D \<Longrightarrow> Bet A B C \<Longrightarrow> Bet B C D"
+proof -
+  assume ACD: "Bet A C D"
+  assume BCD: "Bet B C D"
+
+(*
+lemma ACD_BCD_ABC:
+  "Bet A C D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
+proof -
+  assume ACD: "Bet A C D"
+  assume BCD: "Bet B C D"
+*)
+  
+
 lemma outer_transitivity_between2:
   "Bet A B C \<Longrightarrow> Bet B C D \<Longrightarrow> B \<noteq> C \<Longrightarrow> Bet A C D"
 proof -
@@ -237,7 +252,7 @@ proof -
   have L3: "Congr C D C X" by (rule congr_sym [OF L2])
 
   have L4: "Bet C B A" by (rule bet_sym [OF H1])
-  have L5: "Bet B C X" by (rule CBA_BCD [OF L4 L1])
+  have L5: "Bet B C X" by (rule CBA_ACD_BCD [OF L4 L1])
 
   have L6: "Congr C X C X" by (rule congr_refl [of C X])
 
@@ -248,7 +263,7 @@ proof -
     using L7 L1 by (rule ssubst)
 qed
 
-lemma between_exchange2:
+lemma ABC_BCD_ACD:
   "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A C D"
 proof -
   assume H1: "Bet A B D"
@@ -269,7 +284,7 @@ proof -
 
     have L2 : "Bet D B A" by (rule bet_sym [OF H1])
 
-    have L3 : "Bet C B A" by (rule CBA_BCD [OF H2 L2])
+    have L3 : "Bet C B A" by (rule CBA_ACD_BCD [OF H2 L2])
 
     have L4: "Bet A B C" by (rule bet_sym [OF L3])
 
@@ -304,14 +319,14 @@ proof -
     using L6 by (rule bet_sym)
 qed
 
-lemma bet_concat:
-  "Bet A B C \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B D"
+lemma ACD_ABC_ABD:
+  "Bet A C D \<Longrightarrow> Bet A B C \<Longrightarrow> Bet A B D"
 proof -
   assume H1: "Bet A B C"
   assume H2: "Bet A C D"
 
   have L1: "Bet C B A" by (rule bet_sym [OF H1])
-  have L2: "Bet B C D" by (rule CBA_BCD [OF L1 H2])
+  have L2: "Bet B C D" by (rule CBA_ACD_BCD [OF L1 H2])
 
   show "Bet A B D"
   proof (cases "B = C")
@@ -356,7 +371,7 @@ proof -
   assume H1: "Bet A B D"
   assume H2: "\<not> Bet A B C"
 
-  have H3: "Bet B C D \<Longrightarrow> Bet A B C" by (rule bet_inner_trans [OF H1])
+  have H3: "Bet B C D \<Longrightarrow> Bet A B C" by (rule ABD_BCD_ABC [OF H1])
 
   show Goal: "\<not> Bet B C D"
     by (rule contrapos_nn [OF H2 H3])
@@ -396,7 +411,7 @@ lemma not_bet_ABC:
 
 lemma not_bet_ACD:
   "Bet A B C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A C D"
-*)
+
 
 lemma bet_inner_conn:
   "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
@@ -420,5 +435,5 @@ proof -
     have H6: "\<not> Bet C B A" by (rule not_bet_sym [OF H3])
     have H7: "B \<noteq> A" by (rule not_bet_not_eq [OF H6])
     have H8: "C \<noteq> D" by (rule not_bet_not_eq [OF H5])
-
+*)
 end
