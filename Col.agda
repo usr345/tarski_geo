@@ -110,7 +110,3 @@ col-elim {A} {B} {C} {P} f1 f2 f3 H =
 
  {- Потом можно будет писать col-elim (λ ABC → ...) (λ BCA → ...) (λ CAB → ...) H -}
 
-NonCol : Point → Point → Point → Set
-NonCol A B C = ¬ Col A B C
-
-

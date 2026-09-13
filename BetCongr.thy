@@ -1,5 +1,5 @@
 theory BetCongr
-  imports Axioms Bet Congr
+  imports Bet Congr
 begin
 
 lemma congr_summa:
@@ -224,7 +224,7 @@ proof-
   show "Bet A' B' C'" using X_eq_B1 AXC_1 by (rule subst)
 qed
 
-lemma cong3_bet_eq :
+lemma cong3_bet_eq:
   fixes A B C X :: Point
   shows "Bet A B C \<Longrightarrow> Congr A B A X \<Longrightarrow> Congr B C X C \<Longrightarrow> X = B"
 proof-
@@ -245,3 +245,4 @@ proof-
 
   show "X = B" using B_eq_X by (rule sym)
 qed
+end
