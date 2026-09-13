@@ -222,21 +222,6 @@ proof -
     using L7 by (rule congr_id)
 qed
 
-lemma ABD_ABC_BCD:
-  "Bet A B D \<Longrightarrow> Bet A B C \<Longrightarrow> Bet B C D"
-proof -
-  assume ACD: "Bet A C D"
-  assume BCD: "Bet B C D"
-
-(*
-lemma ACD_BCD_ABC:
-  "Bet A C D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A B C"
-proof -
-  assume ACD: "Bet A C D"
-  assume BCD: "Bet B C D"
-*)
-  
-
 lemma outer_transitivity_between2:
   "Bet A B C \<Longrightarrow> Bet B C D \<Longrightarrow> B \<noteq> C \<Longrightarrow> Bet A C D"
 proof -
@@ -263,8 +248,9 @@ proof -
     using L7 L1 by (rule ssubst)
 qed
 
-lemma ABC_BCD_ACD:
-  "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A C D"
+lemma ABD_BCD_ACD:
+  fixes A B C D :: Point
+  shows "Bet A B D \<Longrightarrow> Bet B C D \<Longrightarrow> Bet A C D"
 proof -
   assume H1: "Bet A B D"
   assume H2: "Bet B C D"

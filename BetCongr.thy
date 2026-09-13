@@ -136,4 +136,49 @@ proof -
   assume ABC: "Bet A B C"
   assume AC_AC1: "Congr A C A' C'"
 
+  have H1: "\<exists> X . Bet A' C' X \<and> C' \<noteq> X" by (rule point_construction_different [of A' C'])
+  obtain X :: Point where
+    ACX_1: "Bet A' C' X" and
+    C1_ne_X: "C' \<noteq> X"
+    using H1 by blast  
+
+  have H2: "\<exists> B'. Bet X C' B' \<and> Congr C' B' C B" by (rule segment_construction [of X C' C B])
+  obtain B' :: Point where
+    XCB_1: "Bet X C' B'" and
+    CB1_CB: "Congr C' B' C B"
+    using H2 by blast
+
+  have CB_CB1: "Congr C B C' B'" by (rule congr_sym [OF CB1_CB])
+  have BC_BC1: "Congr B C B' C'" by (rule congr_reverse [OF CB_CB1])
   
+  have H3: "\<exists> Y. Bet X B' Y \<and> Congr B' Y B A" by (rule segment_construction [of X B' B A])
+  obtain Y :: Point where
+    XBY_1: "Bet X B' Y" and
+    B1Y_BA: "Congr B' Y B A"
+    using H3 by blast
+
+  have BCX_1: "Bet B' C' X" by (rule bet_sym [OF XCB_1])
+  have CBY_1: "Bet C' B' Y" by (rule CBA_ACD_BCD [OF BCX_1 XBY_1])
+
+  have CBA: "Bet C B A" by (rule bet_sym [OF ABC])
+  have CB1_CB: "Congr C' B' C B" by (rule congr_sym [OF CB_CB1])
+
+  have CY1_CA: "Congr C' Y C A" by (rule congr_summa [OF CBY_1 CBA CB1_CB B1Y_BA])
+  have YB1X: "Bet Y B' X" by (rule bet_sym [OF XBY_1])
+  have YC1X: "Bet Y C' X" using YB1X BCX_1 by (rule ABD_BCD_ACD [where A=Y and B="B'" and C="C'" and D=X])
+  have XC1Y: "Bet X C' Y" by (rule bet_sym [OF YC1X])
+
+  have X_ne_C1: "X \<noteq> C'" by (rule not_sym [OF C1_ne_X])
+  have AC1_AC: "Congr A' C' A C" by (rule congr_sym [OF AC_AC1])
+  have CA1_CA: "Congr C' A' C A" by (rule congr_reverse [OF AC1_AC])
+
+  have XCA_1: "Bet X C' A'" by (rule bet_sym [OF ACX_1])
+  have Y_eq_A1: "Y = A'" using X_ne_C1 XC1Y CY1_CA XCA_1 CA1_CA by (rule construction_uniqueness [of X C' Y C A A'])
+
+  have BA1_BA: "Congr B' A' B A" using Y_eq_A1 B1Y_BA by (rule subst)
+  have AB1_AB: "Congr A' B' A B" by (rule congr_reverse [OF BA1_BA])
+  have AB_AB1: "Congr A B A' B'" by (rule congr_sym [OF AB1_AB])
+
+  have conj: "Congr A B A' B' \<and> Congr B C B' C'" by (rule conjI [OF AB_AB1 BC_BC1])
+  show "\<exists> B' . Congr A B A' B' \<and> Congr B C B' C'" using conj by (rule exI [of _ "B'"])
+qed
