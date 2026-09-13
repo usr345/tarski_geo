@@ -131,7 +131,7 @@ qed
 
 lemma l4_5:
   fixes A B C A' C' :: Point
-  shows "Bet A B C \<Longrightarrow> Congr A C A' C' \<Longrightarrow> \<exists> B' . Congr A B A' B' \<and> Congr B C B' C'"
+  shows "Bet A B C \<Longrightarrow> Congr A C A' C' \<Longrightarrow> \<exists> B' .  Bet A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'"
 proof -
   assume ABC: "Bet A B C"
   assume AC_AC1: "Congr A C A' C'"
@@ -140,7 +140,7 @@ proof -
   obtain X :: Point where
     ACX_1: "Bet A' C' X" and
     C1_ne_X: "C' \<noteq> X"
-    using H1 by blast  
+    using H1 by blast
 
   have H2: "\<exists> B'. Bet X C' B' \<and> Congr C' B' C B" by (rule segment_construction [of X C' C B])
   obtain B' :: Point where
@@ -179,6 +179,69 @@ proof -
   have AB1_AB: "Congr A' B' A B" by (rule congr_reverse [OF BA1_BA])
   have AB_AB1: "Congr A B A' B'" by (rule congr_sym [OF AB1_AB])
 
+  have CBA_1: "Bet C' B' A'" using Y_eq_A1 CBY_1 by (rule subst)
+  have ABC_1: "Bet A' B' C'" by (rule bet_sym [OF CBA_1])
   have conj: "Congr A B A' B' \<and> Congr B C B' C'" by (rule conjI [OF AB_AB1 BC_BC1])
-  show "\<exists> B' . Congr A B A' B' \<and> Congr B C B' C'" using conj by (rule exI [of _ "B'"])
+  have conj1: "Bet A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'" by 
+        (rule conjI [OF ABC_1 conj])
+  show "\<exists> B' .  Bet A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'" using conj1 by (rule exI [of _ "B'"])
+qed
+
+lemma l4_6 : 
+  fixes A B C A' B' C' :: Point
+  shows "Bet A B C \<Longrightarrow> Congr A B A' B' \<Longrightarrow> Congr B C B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Bet A' B' C'"
+proof-
+  assume ABC: "Bet A B C"
+  assume AB_AB1: "Congr A B A' B'"
+  assume BC_BC1: "Congr B C B' C'"
+  assume AC_AC1: "Congr A C A' C'"
+
+  have H1: "\<exists> X . Bet A' X C' \<and> Congr A B A' X \<and> Congr B C X C'" by (rule l4_5 [OF ABC AC_AC1])
+  obtain X :: Point where
+    AXC_1: "Bet A' X C'" and
+    conj: "Congr A B A' X \<and> Congr B C X C'"
+    using H1 by blast
+
+  have AB_AX1: "Congr A B A' X" by (rule conjunct1 [OF conj])
+  have BC_XC1: "Congr B C X C'" by (rule conjunct2 [OF conj])
+
+  have AX1_AB: "Congr A' X A B" by (rule congr_sym [OF AB_AX1])
+  have AX_AB1: "Congr A' X A' B'" by (rule congr_trans [OF AX1_AB AB_AB1])
+
+  have XC1_BC: "Congr X C' B C" by (rule congr_sym [OF BC_XC1])
+  have XC_BC1: "Congr X C' B' C'" by (rule congr_trans [OF XC1_BC BC_BC1])
+
+  have CX_CB1: "Congr C' X C' B'" by (rule congr_reverse [OF XC_BC1])
+  have AC_AC1: "Congr A' C' A' C'" by (rule congr_refl [of A' C'])
+  have XC_XC1: "Congr X C' X C'" by (rule congr_refl [of X C'])
+
+  have XX_XB1: "Congr X X X B'" using AXC_1 AXC_1 AC_AC1 XC_XC1 AX_AB1 CX_CB1
+    by (rule l4_2 [where A="A'" and B=X and C="C'" and D=X and A'="A'" 
+          and B'="X" and C'="C'" and D'="B'"])
+
+  have XB1_XX: "Congr X B' X X" by (rule congr_sym [OF XX_XB1])
+  have X_eq_B1: "X = B'" by (rule congr_id [OF XB1_XX])
+  show "Bet A' B' C'" using X_eq_B1 AXC_1 by (rule subst)
+qed
+
+lemma cong3_bet_eq :
+  fixes A B C X :: Point
+  shows "Bet A B C \<Longrightarrow> Congr A B A X \<Longrightarrow> Congr B C X C \<Longrightarrow> X = B"
+proof-
+  assume ABC: "Bet A B C"
+  assume AB_AX: "Congr A B A X"
+  assume BC_XC: "Congr B C X C"
+
+  have AC_AC: "Congr A C A C" by (rule congr_refl [of A C])
+  have BC_BC: "Congr B C B C" by (rule congr_refl [of B C])
+  have CB_CX: "Congr C B C X" by (rule congr_reverse [OF BC_XC])
+
+  have BB_BX: "Congr B B B X" using ABC ABC AC_AC BC_BC AB_AX CB_CX
+    by (rule l4_2 [where A="A" and B=B and C=C and D=B and A'=A 
+          and B'=B and C'=C and D'=X])
+
+  have BX_BB: "Congr B X B B" by (rule congr_sym [OF BB_BX])
+  have B_eq_X: "B = X" by (rule congr_id [OF BX_BB])
+
+  show "X = B" using B_eq_X by (rule sym)
 qed
