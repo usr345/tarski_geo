@@ -157,10 +157,8 @@ proof -
   assume H3: "Bet C A B \<Longrightarrow> P"
   assume col_ABC: "Col A B C"
 
-  have disj: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
-    using col_ABC[unfolded Col_def] by assumption
-
-  then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+  from col_ABC[unfolded Col_def] 
+  consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
     by blast
   then show "P"
   proof cases
