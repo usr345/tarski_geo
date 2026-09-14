@@ -190,7 +190,7 @@ qed
 lemma l4_6 : 
   fixes A B C A' B' C' :: Point
   shows "Bet A B C \<Longrightarrow> Congr A B A' B' \<Longrightarrow> Congr B C B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Bet A' B' C'"
-proof-
+proof -
   assume ABC: "Bet A B C"
   assume AB_AB1: "Congr A B A' B'"
   assume BC_BC1: "Congr B C B' C'"
@@ -227,7 +227,7 @@ qed
 lemma cong3_bet_eq:
   fixes A B C X :: Point
   shows "Bet A B C \<Longrightarrow> Congr A B A X \<Longrightarrow> Congr B C X C \<Longrightarrow> X = B"
-proof-
+proof -
   assume ABC: "Bet A B C"
   assume AB_AX: "Congr A B A X"
   assume BC_XC: "Congr B C X C"
