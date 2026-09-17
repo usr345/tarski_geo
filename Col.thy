@@ -38,7 +38,100 @@ proof -
   show "Col A B C" unfolding Col_def by (fact disj2)
 qed
 
-lemma col_swap: 
+lemma col_permutation1: 
+  fixes A B C :: Point
+  shows "Col A B C \<Longrightarrow> Col B C A"
+proof -
+  assume col_ABC: "Col A B C"
+
+  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+  then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "Col B C A"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+
+    show "Col B C A" by (rule col_from_bet3 [OF ABC])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    show "Col B C A" by (rule col_from_bet1 [OF BCA])
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    show "Col B C A" by (rule col_from_bet2 [OF CAB])
+  qed
+qed
+
+lemma col_permutation2: 
+  fixes A B C :: Point
+  shows "Col A B C \<Longrightarrow> Col C A B"
+proof -
+  assume col_ABC: "Col A B C"
+
+  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+  then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "Col C A B"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+
+    show "Col C A B" by (rule col_from_bet2 [OF ABC])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    show "Col C A B" by (rule col_from_bet3 [OF BCA])
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    show "Col C A B" by (rule col_from_bet1 [OF CAB])
+  qed
+qed
+
+lemma col_permutation3: 
+  fixes A B C :: Point
+  shows "Col A B C \<Longrightarrow> Col C B A"
+proof -
+  assume col_ABC: "Col A B C"
+
+  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+    then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "Col C B A"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+
+    have CBA: "Bet C B A" by (rule bet_sym [OF ABC])
+    show "Col C B A" by (rule col_from_bet1 [OF CBA])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    have ACB: "Bet A C B" by (rule bet_sym [OF BCA])
+    show "Col C B A" by (rule col_from_bet3 [OF ACB])
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    have BAC: "Bet B A C" by (rule bet_sym [OF CAB])
+    show "Col C B A" by (rule col_from_bet2 [OF BAC])
+  qed
+qed
+
+lemma col_permutation4: 
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col B A C"
 proof -
@@ -71,63 +164,111 @@ proof -
   qed
 qed
 
-lemma col_rotate1: 
+lemma col_permutation5: 
   fixes A B C :: Point
-  shows "Col A B C \<Longrightarrow> Col B C A"
+  shows "Col A B C \<Longrightarrow> Col A C B"
 proof -
   assume col_ABC: "Col A B C"
 
   have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
     using col_ABC[unfolded Col_def] by assumption
 
-  then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
     by blast
-  then show "Col B C A"
+  then show "Col A C B"
   proof cases
     case case1
     assume ABC: "Bet A B C"
 
-    show "Col B C A" by (rule col_from_bet3 [OF ABC])
+    have CBA: "Bet C B A" by (rule bet_sym [OF ABC])
+    show "Col A C B" by (rule col_from_bet2 [OF CBA])
   next
     case case2
     assume BCA: "Bet B C A"
 
-    show "Col B C A" by (rule col_from_bet1 [OF BCA])
+    have ACB: "Bet A C B" by (rule bet_sym [OF BCA])
+    show "Col A C B" by (rule col_from_bet1 [OF ACB])
   next
     case case3
     assume CAB: "Bet C A B"
 
-    show "Col B C A" by (rule col_from_bet2 [OF CAB])
+    have BAC: "Bet B A C" by (rule bet_sym [OF CAB])
+    show "Col A C B" by (rule col_from_bet3 [OF BAC])
   qed
 qed
 
-lemma col_rotate2: 
+lemma not_col_permutation1: 
   fixes A B C :: Point
-  shows "Col A B C \<Longrightarrow> Col C A B"
+  shows "\<not> Col A B C \<Longrightarrow> \<not> Col B C A"
 proof -
-  assume col_ABC: "Col A B C"
+  assume not_col_ABC: "\<not> Col A B C"
 
-  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
-    using col_ABC[unfolded Col_def] by assumption
+  show "\<not> Col B C A"
+  proof
+    assume col_BCA: "Col B C A"
 
-  then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
-    by blast
-  then show "Col C A B"
-  proof cases
-    case case1
-    assume ABC: "Bet A B C"
+    have col_ABC: "Col A B C" using col_BCA by (rule col_permutation2 [of B C A])
+    show "False" using not_col_ABC col_ABC by (rule notE)
+  qed
+qed
 
-    show "Col C A B" by (rule col_from_bet2 [OF ABC])
-  next
-    case case2
-    assume BCA: "Bet B C A"
+lemma not_col_permutation2: 
+  fixes A B C :: Point
+  shows "\<not> Col A B C \<Longrightarrow> \<not> Col C A B"
+proof -
+  assume not_col_ABC: "\<not> Col A B C"
 
-    show "Col C A B" by (rule col_from_bet3 [OF BCA])
-  next
-    case case3
-    assume CAB: "Bet C A B"
+  show "\<not> Col C A B"
+  proof
+    assume col_CAB: "Col C A B"
 
-    show "Col C A B" by (rule col_from_bet1 [OF CAB])
+    have col_ABC: "Col A B C" using col_CAB by (rule col_permutation1 [of C A B])
+    show "False" using not_col_ABC col_ABC by (rule notE)
+  qed
+qed
+
+lemma not_col_permutation3: 
+  fixes A B C :: Point
+  shows "\<not> Col A B C \<Longrightarrow> \<not> Col C B A"
+proof -
+  assume not_col_ABC: "\<not> Col A B C"
+
+  show "\<not> Col C B A"
+  proof
+    assume col_CBA: "Col C B A"
+
+    have col_ABC: "Col A B C" using col_CBA by (rule col_permutation3 [of C B A])
+    show "False" using not_col_ABC col_ABC by (rule notE)
+  qed
+qed
+
+lemma not_col_permutation4:
+  fixes A B C :: Point
+  shows "\<not> Col A B C \<Longrightarrow> \<not> Col B A C"
+proof -
+  assume not_col_ABC: "\<not> Col A B C"
+
+  show "\<not> Col B A C"
+  proof
+    assume col_BAC: "Col B A C"
+
+    have col_ABC: "Col A B C" using col_BAC by (rule col_permutation4 [of B A C])
+    show "False" using not_col_ABC col_ABC by (rule notE)
+  qed
+qed
+
+lemma not_col_permutation5:
+  fixes A B C :: Point
+  shows "\<not> Col A B C \<Longrightarrow> \<not> Col A C B"
+proof -
+  assume not_col_ABC: "\<not> Col A B C"
+
+  show "\<not> Col A C B"
+  proof
+    assume col_ACB: "Col A C B"
+
+    have col_ABC: "Col A B C" using col_ACB by (rule col_permutation5 [of A C B])
+    show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
 
