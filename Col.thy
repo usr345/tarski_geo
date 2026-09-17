@@ -272,7 +272,7 @@ proof -
   qed
 qed
 
-lemma col_left: 
+lemma col_AAB: 
   fixes A B :: Point
   shows "Col A A B"
 proof -
@@ -280,12 +280,20 @@ proof -
   show "Col A A B" by (rule col_from_bet1 [OF AAB])
 qed
 
-lemma col_right: 
+lemma col_ABB: 
   fixes A B :: Point
   shows "Col A B B"
 proof -
   have ABB: "Bet A B B" by (rule bet_right [of A B])
   show "Col A B B" by (rule col_from_bet1 [OF ABB])
+qed
+
+lemma col_ABA: 
+  fixes A B :: Point
+  shows "Col A B A"
+proof -
+  have AAB: "Bet A A B" by (rule bet_left [of A B])
+  show "Col A B A" by (rule col_from_bet3 [OF AAB])
 qed
 
 lemma col_elim: 
@@ -317,6 +325,47 @@ proof -
     assume CAB: "Bet C A B"
 
     show "P" by (rule H3 [OF CAB])
+  qed
+qed
+
+lemma l4_13: 
+  fixes A B C A' B' C' :: Point
+  shows "Col A B C \<Longrightarrow> Congr A B A' B' \<Longrightarrow> Congr B C B' C' \<Longrightarrow> Congr A C A' C' \<Longrightarrow> Col A' B' C'"
+proof -
+  assume col_ABC: "Col A B C"
+  assume AB_AB1: "Congr A B A' B'"
+  assume BC_BC1: "Congr B C B' C'"
+  assume AC_AC1: "Congr A C A' C'"
+
+  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+    then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "Col A' B' C'"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+    
+    have ABC_1: "Bet A' B' C'" by (rule l4_6 [OF ABC AB_AB1 BC_BC1 AC_AC1])
+    show "Col A' B' C'" by (rule col_from_bet1 [OF ABC_1])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    have CA_CA1: "Congr C A C' A'" by (rule congr_reverse [OF AC_AC1])
+    have BA_BA1: "Congr B A B' A'" by (rule congr_reverse [OF AB_AB1])
+
+    have BCA_1: "Bet B' C' A'" by (rule l4_6 [OF BCA BC_BC1 CA_CA1 BA_BA1])
+    show "Col A' B' C'" by (rule col_from_bet2 [OF BCA_1])
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    have CA_CA1: "Congr C A C' A'" by (rule congr_reverse [OF AC_AC1])
+    have CB_CB1: "Congr C B C' B'" by (rule congr_reverse [OF BC_BC1])
+    have CAB_1: "Bet C' A' B'" by (rule l4_6 [OF CAB CA_CA1 AB_AB1 CB_CB1])
+    show "Col A' B' C'" by (rule col_from_bet3 [OF CAB_1])
   qed
 qed
 end
