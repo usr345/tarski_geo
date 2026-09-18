@@ -368,4 +368,68 @@ proof -
     show "Col A' B' C'" by (rule col_from_bet3 [OF CAB_1])
   qed
 qed
+
+lemma l4_14: 
+  fixes A B C A' C' :: Point
+  shows "Col A B C \<Longrightarrow> Congr A C A' C' \<Longrightarrow> \<exists> B' . Col A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'"
+proof -
+  assume col_ABC: "Col A B C"
+  assume AC_AC1: "Congr A C A' C'"
+
+  have disj1: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+    then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "\<exists> B' . Col A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+
+    have H1: "\<exists> B' .  Bet A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'" by (rule l4_5 [OF ABC AC_AC1])
+
+    obtain X :: Point where
+      conj1: "Bet A' X C' \<and> Congr A B A' X \<and> Congr B C X C'"
+      using H1 by (elim exE)
+
+    from conj1 have AXC_1: "Bet A' X C'"
+      by (rule conjunct1)
+
+    from conj1 have conj2: "Congr A B A' X \<and> Congr B C X C'"
+      by (rule conjunct2)
+
+    have col_AXC1: "Col A' X C'" by (rule col_from_bet1 [OF AXC_1])
+    have conj3: "Col A' X C' \<and> Congr A B A' X \<and> Congr B C X C'" using col_AXC1 conj2 by (rule conjI)
+
+    show "\<exists> B' . Col A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'" using conj3 by (rule exI [of _ "X"])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    thm l4_5 [of B C A A' C']
+    have H1: "\<exists> B' .  Bet A' B' C' \<and> Congr B C A' B' \<and> Congr C A B' C'" by (rule l4_5 [OF BCA AC_AC1])
+
+    obtain X :: Point where
+      conj1: "Bet A' X C' \<and> Congr A B A' X \<and> Congr B C X C'"
+      using H1 by (elim exE)
+
+    from conj1 have AXC_1: "Bet A' X C'"
+      by (rule conjunct1)
+
+    from conj1 have conj2: "Congr A B A' X \<and> Congr B C X C'"
+      by (rule conjunct2)
+
+    have col_AXC1: "Col A' X C'" by (rule col_from_bet1 [OF AXC_1])
+    have conj3: "Col A' X C' \<and> Congr A B A' X \<and> Congr B C X C'" using col_AXC1 conj2 by (rule conjI)
+
+    show "\<exists> B' . Col A' B' C' \<and> Congr A B A' B' \<and> Congr B C B' C'" using conj3 by (rule exI [of _ "X"])
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    have CA_CA1: "Congr C A C' A'" by (rule congr_reverse [OF AC_AC1])
+    have CB_CB1: "Congr C B C' B'" by (rule congr_reverse [OF BC_BC1])
+    have CAB_1: "Bet C' A' B'" by (rule l4_6 [OF CAB CA_CA1 AB_AB1 CB_CB1])
+    show "Col A' B' C'" by (rule col_from_bet3 [OF CAB_1])
+  qed
 end
