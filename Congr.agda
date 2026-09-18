@@ -7,6 +7,7 @@ open import Data.Sum
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary using (¬_)
 open import Relation.Nullary.Negation
+open import Function.Base using (case_of_; case_returning_of_)
 
 congr-refl : ∀ (A B : Point) → Congr A B A B
 congr-refl A B =
@@ -142,4 +143,4 @@ congr-summa {A} {B} {C} {A'} {B'} {C'} H1 H2 H3 H4 with LEM (A ≡ B)
     in Goal
 
 
- 
+

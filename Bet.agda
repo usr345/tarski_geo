@@ -122,8 +122,8 @@ point-construction-different A B =
     in Goal
  
 
-cba-bcd : ∀ {A B C D : Point} → Bet C B A → Bet A C D → Bet B C D
-cba-bcd {A} {B}{C}{D} H1 H2 =
+CBA-ACD-BCD : ∀ {A B C D : Point} → Bet C B A → Bet A C D → Bet B C D
+CBA-ACD-BCD {A} {B}{C}{D} H1 H2 =
  let
   L1 : Bet D C A
   L1 = bet-sym H2
@@ -231,7 +231,7 @@ bet-unique-middle {A} {B} {C} H1 H2 =
         L5 = bet-sym H1
 
         L6 : Bet B C E
-        L6 = cba-bcd L5 ACE
+        L6 = CBA-ACD-BCD L5 ACE
 
         L7 : Bet E C B
         L7 = bet-sym L6
@@ -240,7 +240,7 @@ bet-unique-middle {A} {B} {C} H1 H2 =
         L8 = bet-sym H2
 
         L9 : Bet B' C' E'
-        L9 = cba-bcd L8 ACE'
+        L9 = CBA-ACD-BCD L8 ACE'
 
         L10 : Bet E' C' B'
         L10 = bet-sym L9
@@ -273,14 +273,14 @@ bet-unique-middle {A} {B} {C} H1 H2 =
  Goal = congr-reverse L3
  in Goal
 
-bet-inner-trans : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A B C
-bet-inner-trans {A} {B} {C} {D} H1 H2 =
+ABD-BCD-ABC : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A B C
+ABD-BCD-ABC {A} {B} {C} {D} H1 H2 =
  let
   L1 : Bet D B A
   L1 = bet-sym H1
 
   L2 : Bet C B A
-  L2 = cba-bcd H2 L1
+  L2 = CBA-ACD-BCD H2 L1
 
   Goal : Bet A B C
   Goal = bet-sym L2
@@ -329,7 +329,7 @@ outer-transitivity-between2 {A} {B} {C} {D} H1 H2 H3 =
   H1-rev = bet-sym H1
 
   L4 : Bet B C X
-  L4 = cba-bcd H1-rev L1
+  L4 = CBA-ACD-BCD H1-rev L1
 
   L5 : Congr C X C X
   L5 = congr-refl C X
@@ -345,8 +345,8 @@ outer-transitivity-between2 {A} {B} {C} {D} H1 H2 H3 =
        {- Ниже два варианта того, как можно разбирать дизъюнкцию.
               ⊎ вводится через /u+ -}
 
-between-exchange2 : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A C D
-between-exchange2 {A} {B} {C} {D} H1 H2 with LEM (B ≡ C)
+ABD-BCD-ACD : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A C D
+ABD-BCD-ACD {A} {B} {C} {D} H1 H2 with LEM (B ≡ C)
 
 ... | inj₁ Heq =
   subst (λ X → Bet A X D) Heq H1
@@ -357,7 +357,7 @@ between-exchange2 {A} {B} {C} {D} H1 H2 with LEM (B ≡ C)
     L2 = bet-sym H1
 
     L3 : Bet C B A
-    L3 = cba-bcd H2 L2
+    L3 = CBA-ACD-BCD H2 L2
 
     L4 : Bet A B C
     L4 = bet-sym L3
@@ -366,8 +366,8 @@ between-exchange2 {A} {B} {C} {D} H1 H2 with LEM (B ≡ C)
     Goal = outer-transitivity-between2 L4 H2 Hneq
   in Goal
 
-between-exchange2-new : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A C D
-between-exchange2-new {A} {B} {C} {D} H1 H2 =
+ABD-BCD-ACD-new : ∀ {A B C D : Point} → Bet A B D → Bet B C D → Bet A C D
+ABD-BCD-ACD-new {A} {B} {C} {D} H1 H2 =
   let
 
     case1 : B ≡ C → Bet A C D
@@ -381,7 +381,7 @@ between-exchange2-new {A} {B} {C} {D} H1 H2 =
         L2 = bet-sym H1
 
         L3 : Bet C B A
-        L3 = cba-bcd H2 L2
+        L3 = CBA-ACD-BCD H2 L2
 
         L4 : Bet A B C
         L4 = bet-sym L3
@@ -420,15 +420,15 @@ bet-outer-trans {A} {B} {C} {D} H1 H2 H3 =
     Goal = bet-sym L6
     in Goal
 
-bet-concat : ∀ {A B C D : Point} → Bet A B C → Bet A C D → Bet A B D
-bet-concat {A} {B} {C} {D} H1 H2 =
+ABC-ACD-ABD : ∀ {A B C D : Point} → Bet A B C → Bet A C D → Bet A B D
+ABC-ACD-ABD {A} {B} {C} {D} H1 H2 =
   let
 
     L1 : Bet C B A
     L1 = bet-sym H1
 
     L2 : Bet B C D
-    L2 = cba-bcd L1 H2
+    L2 = CBA-ACD-BCD L1 H2
 
     case1 : B ≡ C → Bet A B D
     case1 L3 = subst (λ X → Bet A X D) (sym L3) H2
@@ -441,7 +441,7 @@ bet-concat {A} {B} {C} {D} H1 H2 =
     in Goal
 
 contra-inner-trans : ∀ {A B C D : Point} → Bet A B D → ¬ Bet A B C → ¬ Bet B C D
-contra-inner-trans H1 H2 = λ hyp → H2 (bet-inner-trans H1 hyp)
+contra-inner-trans H1 H2 = λ hyp → H2 (ABD-BCD-ABC H1 hyp)
 
 not-bet-not-eq : ∀ {A B C : Point} → ¬ Bet A B C → ¬ B ≡ C
 not-bet-not-eq {A} {B} {C} H1 =
@@ -457,4 +457,11 @@ not-bet-not-eq {A} {B} {C} H1 =
       Goal = L1 L2
       in Goal
 
+bet-id-neq1 : ∀ {A B C} → Bet A B C → A ≢ B → A ≢ C
+bet-id-neq1 {A} {B} {C} ABC A≢B refl = A≢B (bet-id ABC)
+
+bet-id-neq2 : ∀ {A B C} → Bet A B C → B ≢ C → A ≢ C
+bet-id-neq2 ABC B≢C refl = B≢C (sym (bet-id ABC))
+ 
+ 
 
