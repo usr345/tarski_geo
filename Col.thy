@@ -38,7 +38,7 @@ proof -
   show "Col A B C" unfolding Col_def by (fact disj2)
 qed
 
-lemma col_permutation1: 
+lemma col_ABC_BCA:
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col B C A"
 proof -
@@ -68,7 +68,7 @@ proof -
   qed
 qed
 
-lemma col_permutation2: 
+lemma col_ABC_CAB: 
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col C A B"
 proof -
@@ -98,7 +98,7 @@ proof -
   qed
 qed
 
-lemma col_permutation3: 
+lemma col_ABC_CBA: 
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col C B A"
 proof -
@@ -131,7 +131,7 @@ proof -
   qed
 qed
 
-lemma col_permutation4: 
+lemma col_ABC_BAC: 
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col B A C"
 proof -
@@ -164,7 +164,7 @@ proof -
   qed
 qed
 
-lemma col_permutation5: 
+lemma col_ABC_ACB: 
   fixes A B C :: Point
   shows "Col A B C \<Longrightarrow> Col A C B"
 proof -
@@ -197,7 +197,7 @@ proof -
   qed
 qed
 
-lemma not_col_permutation1: 
+lemma not_col_ABC_BCA: 
   fixes A B C :: Point
   shows "\<not> Col A B C \<Longrightarrow> \<not> Col B C A"
 proof -
@@ -207,12 +207,12 @@ proof -
   proof
     assume col_BCA: "Col B C A"
 
-    have col_ABC: "Col A B C" using col_BCA by (rule col_permutation2 [of B C A])
+    have col_ABC: "Col A B C" using col_BCA by (rule col_ABC_CAB [of B C A])
     show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
 
-lemma not_col_permutation2: 
+lemma not_col_ABC_CAB: 
   fixes A B C :: Point
   shows "\<not> Col A B C \<Longrightarrow> \<not> Col C A B"
 proof -
@@ -222,12 +222,12 @@ proof -
   proof
     assume col_CAB: "Col C A B"
 
-    have col_ABC: "Col A B C" using col_CAB by (rule col_permutation1 [of C A B])
+    have col_ABC: "Col A B C" using col_CAB by (rule col_ABC_BCA [of C A B])
     show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
 
-lemma not_col_permutation3: 
+lemma not_col_ABC_CBA: 
   fixes A B C :: Point
   shows "\<not> Col A B C \<Longrightarrow> \<not> Col C B A"
 proof -
@@ -237,12 +237,12 @@ proof -
   proof
     assume col_CBA: "Col C B A"
 
-    have col_ABC: "Col A B C" using col_CBA by (rule col_permutation3 [of C B A])
+    have col_ABC: "Col A B C" using col_CBA by (rule col_ABC_CBA [of C B A])
     show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
 
-lemma not_col_permutation4:
+lemma not_col_ABC_BAC:
   fixes A B C :: Point
   shows "\<not> Col A B C \<Longrightarrow> \<not> Col B A C"
 proof -
@@ -252,12 +252,12 @@ proof -
   proof
     assume col_BAC: "Col B A C"
 
-    have col_ABC: "Col A B C" using col_BAC by (rule col_permutation4 [of B A C])
+    have col_ABC: "Col A B C" using col_BAC by (rule col_ABC_BAC [of B A C])
     show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
 
-lemma not_col_permutation5:
+lemma not_col_ABC_ACB:
   fixes A B C :: Point
   shows "\<not> Col A B C \<Longrightarrow> \<not> Col A C B"
 proof -
@@ -267,7 +267,7 @@ proof -
   proof
     assume col_ACB: "Col A C B"
 
-    have col_ABC: "Col A B C" using col_ACB by (rule col_permutation5 [of A C B])
+    have col_ABC: "Col A B C" using col_ACB by (rule col_ABC_ACB [of A C B])
     show "False" using not_col_ABC col_ABC by (rule notE)
   qed
 qed
