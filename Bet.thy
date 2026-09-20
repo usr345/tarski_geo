@@ -381,45 +381,4 @@ proof -
         by (rule notE)
   qed
 qed
-
-(*
-lemma not_bet_ABC:
-  "Bet A B D \<Longrightarrow> \<not> Bet B C D \<Longrightarrow> \<not> Bet A B C"
-
-lemma not_bet_BCD':
-  "Bet A B D \<Longrightarrow> \<not> Bet A C D \<Longrightarrow> \<not> Bet B C D"
-
-lemma not_bet_BCD_of_not_ABD:
-  "Bet A B C \<Longrightarrow> B \<noteq> C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet B C D"
-
-lemma not_bet_ABC:
-  "Bet A C D \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A B C"
-
-lemma not_bet_ACD:
-  "Bet A B C \<Longrightarrow> \<not> Bet A B D \<Longrightarrow> \<not> Bet A C D"
-
-
-lemma bet_inner_conn:
-  "Bet A B D \<Longrightarrow> Bet A C D \<Longrightarrow> Bet A B C \<or> Bet A C B"
-proof -
-  assume H1: "Bet A B D"
-  assume H2: "Bet A C D"
-
-  show "Bet A B C \<or> Bet A C B"
-  proof (cases "Bet A B C")
-
-    assume H3: "Bet A B C"
-
-    show Goal: "Bet A B C \<or> Bet A C B"
-      using H3 by (rule disjI1)
-  next
-    assume H3: "\<not> Bet A B C"
-
-    have H4: "B \<noteq> C" by (rule not_bet_not_eq [OF H3])
-    have H5: "\<not> Bet B C D" by (rule contra_inner_trans [OF H1 H3])
-
-    have H6: "\<not> Bet C B A" by (rule not_bet_sym [OF H3])
-    have H7: "B \<noteq> A" by (rule not_bet_not_eq [OF H6])
-    have H8: "C \<noteq> D" by (rule not_bet_not_eq [OF H5])
-*)
 end

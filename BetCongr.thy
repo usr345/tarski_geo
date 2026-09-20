@@ -245,4 +245,5 @@ proof -
 
   show "X = B" using B_eq_X by (rule sym)
 qed
+
 end

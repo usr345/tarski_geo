@@ -512,7 +512,7 @@ proof -
   have AB_AB: "Congr A B A B" by (rule congr_refl [of A B])
   have BC_BC: "Congr B C B C" by (rule congr_refl [of B C])
   have AC_AC: "Congr A C A C" by (rule congr_refl [of A C])
-  thm l4_16 [of A B C A B C P Q]
+
   show "Congr C P C Q" using A_ne_B col_ABC AB_AB BC_BC AC_AC AP_AQ BP_BQ by (rule l4_16 [of A B C A B C P Q])
 qed
 
@@ -565,6 +565,123 @@ proof -
     have AC1_AC1: "Congr A C' A C'" by (rule congr_refl [of A "C'"])
 
     show "C = C'" using B_ne_A BAC AC_AC1 BAC1 AC1_AC1 by (rule construction_uniqueness [of B A C A C' C'])
+  qed
+qed
+
+lemma not_col_distincts:
+  fixes A B C :: Point
+  shows "\<not> Col A B C \<Longrightarrow> A \<noteq> B \<and> B \<noteq> C \<and> A \<noteq> C"
+proof -
+
+  assume ncol_ABC: "\<not> Col A B C"
+  have disj: "\<not> (Bet A B C \<or> Bet B C A \<or> Bet C A B)"
+    using ncol_ABC[unfolded Col_def] by assumption
+
+  have conj1: "\<not> Bet A B C \<and> \<not> (Bet B C A \<or> Bet C A B)" using disj by (subst de_Morgan_disj[symmetric])
+
+  have nABC: "\<not> Bet A B C" using conj1 by (rule conjunct1)
+  have disj2: "\<not> (Bet B C A \<or> Bet C A B)" using conj1 by (rule conjunct2)
+  have conj2: "\<not> Bet B C A \<and> \<not> Bet C A B" using disj2 by (subst de_Morgan_disj[symmetric])
+
+  have nBCA: "\<not> Bet B C A" using conj2 by (rule conjunct1)
+  have nCAB: "\<not> Bet C A B" using conj2 by (rule conjunct2)
+
+  have A_neq_B: "A \<noteq> B"
+  proof
+    assume A_eq_B: "A = B"
+
+    have nBBC: "\<not> Bet B B C" using A_eq_B nABC by (rule subst)
+    have BBC: "Bet B B C" by (rule bet_left [of B C])
+    show "False" using nBBC BBC by (rule notE)
+  qed
+
+  have B_neq_C: "B \<noteq> C"
+  proof
+    assume B_eq_C: "B = C"
+
+    have nCCA: "\<not> Bet C C A" using B_eq_C nBCA by (rule subst)
+    have CCA: "Bet C C A" by (rule bet_left [of C A])
+    show "False" using nCCA CCA by (rule notE)
+  qed
+
+  have A_neq_C: "A \<noteq> C"
+  proof
+    assume A_eq_C: "A = C"
+
+    have nCCB: "\<not> Bet C C B" using A_eq_C nCAB by (rule subst)
+    have CCB: "Bet C C B" by (rule bet_left [of C B])
+    show "False" using nCCB CCB by (rule notE)
+  qed
+
+  have conj3: "B \<noteq> C \<and> A \<noteq> C" using B_neq_C A_neq_C by (rule conjI)
+  show "A \<noteq> B \<and> B \<noteq> C \<and> A \<noteq> C" using A_neq_B conj3 by (rule conjI)
+qed
+
+lemma col_congr_full_eq:
+  fixes A B C "A'" "B'" C1 C2 :: Point
+  shows "A \<noteq> B \<Longrightarrow> Col A B C \<Longrightarrow> Congr A B A' B' \<Longrightarrow> Congr B C B' C1 \<Longrightarrow> 
+         Congr A C A' C1 \<Longrightarrow> Congr B C B' C2 \<Longrightarrow> Congr A C A' C2 \<Longrightarrow> C1 = C2"
+proof -
+  assume A_neq_B: "A \<noteq> B"
+  assume col_ABC: "Col A B C"
+  assume AB_AB_1: "Congr A B A' B'"
+  assume BC_BC1: "Congr B C B' C1"
+  assume AC_AC1: "Congr A C A' C1"
+  assume BC_BC2: "Congr B C B' C2"
+  assume AC_AC2: "Congr A C A' C2"
+
+  have disj: "Bet A B C \<or> Bet B C A \<or> Bet C A B" 
+    using col_ABC[unfolded Col_def] by assumption
+
+    then consider (case1) "Bet A B C" | (case2) "Bet B C A" | (case3) "Bet C A B"
+    by blast
+  then show "C1 = C2"
+  proof cases
+    case case1
+    assume ABC: "Bet A B C"
+
+    have A1_ne_B1: "A' \<noteq> B'" using A_neq_B AB_AB_1 by (rule congr_neq)
+    have BC1_BC: "Congr B' C1 B C" by (rule congr_sym [OF BC_BC1])
+    have BC2_BC: "Congr B' C2 B C" by (rule congr_sym [OF BC_BC2])
+
+    have ABC1: "Bet A' B' C1" using ABC AB_AB_1 BC_BC1 AC_AC1 by (rule l4_6 [of A B C "A'" "B'" C1])
+    have ABC2: "Bet A' B' C2" using ABC AB_AB_1 BC_BC2 AC_AC2 by (rule l4_6 [of A B C "A'" "B'" C2])
+
+    show "C1 = C2" using A1_ne_B1 ABC1 BC1_BC ABC2 BC2_BC  by (rule construction_uniqueness [of "A'" "B'" C1 B C C2])
+  next
+    case case2
+    assume BCA: "Bet B C A"
+
+    have CA_C1A: "Congr C A C1 A'" by (rule congr_reverse [OF AC_AC1])
+    have BA_BA1: "Congr B A B' A'" by (rule congr_reverse [OF AB_AB_1])
+    
+    have BC1A: "Bet B' C1 A'" using BCA BC_BC1 CA_C1A BA_BA1 by (rule l4_6 [of B C A B' C1 A'])
+    have AC1B: "Bet A' C1 B'" by (rule bet_sym [OF BC1A])
+
+    have AC1_AC2: "Congr A' C1 A' C2" by (rule congr_inner_transitivity [OF AC_AC1 AC_AC2])
+    have BC1_BC2: "Congr B' C1 B' C2" by (rule congr_inner_transitivity [OF BC_BC1 BC_BC2])
+
+    have C1B_C2B: "Congr C1 B' C2 B'" by (rule congr_reverse [OF BC1_BC2])
+    have C2_eq_C1: "C2 = C1" using AC1B AC1_AC2 C1B_C2B  by (rule cong3_bet_eq [of A' C1 B' C2])
+
+    show "C1 = C2" using C2_eq_C1 by (rule sym)
+  next
+    case case3
+    assume CAB: "Bet C A B"
+
+    have B_neq_A: "B \<noteq> A" using A_neq_B by (rule not_sym)
+
+    have BA_BA1: "Congr B A B' A'" by (rule congr_reverse [OF AB_AB_1])
+    have B1_neq_A1: "B' \<noteq> A'" using B_neq_A BA_BA1 by (rule congr_neq [of B A B' A'])
+    have BAC: "Bet B A C" by (rule bet_sym [OF CAB])
+
+    have BAC1: "Bet B' A' C1" using BAC BA_BA1 AC_AC1 BC_BC1 by (rule l4_6 [of B A C B' A' C1])   
+    have AC1_AC: "Congr A' C1 A C" by (rule congr_sym [OF AC_AC1])
+
+    have BAC2: "Bet B' A' C2" using BAC BA_BA1 AC_AC2 BC_BC2 by (rule l4_6 [of B A C B' A' C2])   
+    have AC2_AC: "Congr A' C2 A C" by (rule congr_sym [OF AC_AC2])
+
+    show "C1 = C2" using B1_neq_A1 BAC1 AC1_AC BAC2 AC2_AC by (rule construction_uniqueness [of "B'" "A'" C1 A C C2])
   qed
 qed
 end

@@ -88,4 +88,22 @@ proof -
   show "Congr A A B B" using H4 H3 by (rule ssubst)
 qed
 
+lemma congr_neq:
+  fixes A B "A'" "B'" :: Point
+  shows "A \<noteq> B \<Longrightarrow> Congr A B A' B' \<Longrightarrow> A' \<noteq> B'"
+proof -
+
+  assume A_neq_B: "A \<noteq> B"
+  assume AB_AB1: "Congr A B A' B'"
+
+  show "A' \<noteq> B'"
+  proof
+    assume A1_eq_B1: "A' = B'"
+
+    have AB_BB1: "Congr A B B' B'" using A1_eq_B1 AB_AB1 by (rule subst)
+    have A_eq_B: "A = B" using AB_BB1 by (rule congr_id)
+
+    show "False" using A_neq_B A_eq_B by (rule notE)
+  qed
+qed
 end
