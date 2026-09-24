@@ -51,10 +51,28 @@ proof -
   have D1CA: "Bet D' C A" by (rule bet_sym [OF ACD_1])
   have CD1B2: "Bet C D' B2" by (rule CBA_ACD_BCD [OF D1CA AD1B2])
   have B2D1C: "Bet B2 D' C" by (rule bet_sym [OF CD1B2])
-  thm congr_summa [of B D C' B2 D' C]
-
+  
   have BC1_B2C: "Congr B C' B2 C" using BDC1 B2D1C BD_B2D1 DC1_D1C by (rule congr_summa [of B D C' B2 D' C])
 
+  have C1DA: "Bet C' D A" by (rule bet_sym [OF ADC_1])
+  have DC1B1: "Bet D C' B'" by (rule CBA_ACD_BCD [OF C1DA ACB_1])
+
+  have BC1B1: "Bet B C' B'"
+  proof (cases "B = D")
+
+    assume B_eq_D: "B = D"
+
+    have ABC1: "Bet A B C'" using B_eq_D ADC_1 by (rule ssubst)
+    have C1BA: "Bet C' B A" by (rule bet_sym [OF ABC1])
+    show "Bet B C' B'" by (rule CBA_ACD_BCD [OF C1BA ACB_1])
+  next
+
+    assume B_neq_D: "B \<noteq> D"
+
+    thm outer_transitivity_between2 [of B D C' B']
+    show "Bet B C' B'" using BDC1 DC1B1  by (rule outer_transitivity_between2 [of B D C' B'])
+    (* BDC1 D C' B' *)
+  qed
   thm congr_summa [of B C' B' B2 C B]
 (*
 Bet B C' B' <- ?
@@ -69,6 +87,7 @@ A D C'
 B D C'
 A B C
 A B D
+B D C'
 *)
 
   have BC1_B2C: "B B' B2 B" by rule congr_summa
