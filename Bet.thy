@@ -381,4 +381,34 @@ proof -
         by (rule notE)
   qed
 qed
-end
+
+lemma bet_id_neq1 : "Bet A B C \<Longrightarrow> A \<noteq> B \<Longrightarrow> A \<noteq> C"
+proof -
+  assume H1 :  "Bet A B C"
+  assume H2 : "A \<noteq> B"
+  show "A \<noteq> C"
+  proof
+    assume H3 : "A = C"
+    
+    have L1 : "Bet A B A" using H3 H1 by (rule ssubst)
+    have L2 : "A = B" using L1 by (rule bet_id)
+    show "False" using H2 L2 by (rule notE)
+  qed
+qed
+
+lemma bet_id_neq2 : "Bet A B C \<Longrightarrow> B \<noteq> C \<Longrightarrow> A \<noteq> C"
+proof -
+  assume H1 :  "Bet A B C"
+  assume H2 : "B \<noteq> C"
+  show "A \<noteq> C"
+  proof
+    assume H3 : "A = C"
+    
+    have L1 : "Bet C B C" using H3 H1 by (rule subst)
+    have L2 : "C = B" using L1 by (rule bet_id)
+    have L3 : "B = C" using L2 by (rule sym)
+    show "False" using H2 L3 by (rule notE)
+  qed
+qed
+
+end 
